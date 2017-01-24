@@ -1,5 +1,5 @@
-#ifndef DISPENCER_H
-#define DISPENCER_H
+#ifndef dispenser_H
+#define dispenser_H
 
 #include <QObject>
 #include <QThread>
@@ -10,11 +10,11 @@
 #include "data_id.h"
 
 namespace odm {
-    class Dispencer : public QObject
+    class Dispenser : public QObject
     {
         Q_OBJECT
     public:
-        explicit Dispencer(QObject *parent = 0);
+        explicit Dispenser(QObject *parent = 0);
     private:
         //dataset structure/class for real time data
 
@@ -25,4 +25,4 @@ namespace odm {
     };
 }
 
-#endif // DISPENCER_H
+#endif // dispenser_H

@@ -1,20 +1,20 @@
-#include "dispencer.h"
+#include "dispenser.h"
 
 /**
- * @brief odm::Dispencer::Dispencer
+ * @brief odm::dispenser::dispenser
  * @param parent
  */
-odm::Dispencer::Dispencer(QObject *parent) : QObject(parent)
+odm::Dispenser::Dispenser(QObject *parent) : QObject(parent)
 {
 
 }
 
 /**
  * Updates the realtime dataset.
- * @brief odm::Dispencer::processData
+ * @brief odm::dispenser::processData
  * @param dataset
  */
-void odm::Dispencer::processData(QVector<data_id> dataset){
+void odm::Dispenser::processData(QVector<data_id> dataset){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
     foreach (data_id tuple, dataset) {

@@ -7,20 +7,20 @@
 odm::Controller::Controller(QObject *parent) : QThread(parent) {
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
     reciever.moveToThread(&rThread);
-    dispencer.moveToThread(&tThread);
+    dispenser.moveToThread(&tThread);
 
     qRegisterMetaType<QVector<data_id>>("QVector<data_id>");
     QObject::connect(&rThread, SIGNAL(started()), &reciever, SLOT(recieveData()));
-    QObject::connect(&tThread, SIGNAL(started()), &dispencer, SIGNAL(requestData()));
+    QObject::connect(&tThread, SIGNAL(started()), &dispenser, SIGNAL(requestData()));
 
-    QObject::connect(&dispencer, SIGNAL(requestData()), this, SIGNAL(queued_prepareData()));
+    QObject::connect(&dispenser, SIGNAL(requestData()), this, SIGNAL(queued_prepareData()));
     QObject::connect(&reciever, SIGNAL(noDataToTransfer()), this, SIGNAL(queued_prepareData()));
     QObject::connect(this, SIGNAL(queued_prepareData()), &reciever, SLOT(prepareData()));
 
     QObject::connect(&reciever, SIGNAL(endOfReception()), this, SIGNAL(queued_recieveData()));
     QObject::connect(this, SIGNAL(queued_recieveData()), &reciever, SLOT(recieveData()));
 
-    QObject::connect(&reciever, SIGNAL(transferData(QVector<data_id>)), &dispencer, SLOT(processData(QVector<data_id>)));
+    QObject::connect(&reciever, SIGNAL(transferData(QVector<data_id>)), &dispenser, SLOT(processData(QVector<data_id>)));
 }
 
 /**
@@ -34,7 +34,7 @@ void odm::Controller::run(){
 }
 
 /**
- * Starts the Controller then the Receiver and Dispencer threads.
+ * Starts the Controller then the Receiver and Dispenser threads.
  * @brief odm::Controller::launch
  */
 void odm::Controller::launch(){

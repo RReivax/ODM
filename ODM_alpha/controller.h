@@ -9,7 +9,7 @@
 
 #include "data_id.h"
 #include "receiver.h"
-#include "dispencer.h"
+#include "dispenser.h"
 
 namespace odm{
     class Controller : public QThread
@@ -26,7 +26,7 @@ namespace odm{
         QThread rThread;
         QThread tThread;
         Receiver reciever;
-        Dispencer dispencer;
+        Dispenser dispenser;
     };
 }
 
