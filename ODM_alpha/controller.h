@@ -1,0 +1,33 @@
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
+
+#include <QObject>
+#include <QThread>
+#include <QDebug>
+#include <QVector>
+#include <QStack>
+
+#include "data_id.h"
+#include "receiver.h"
+#include "dispencer.h"
+
+namespace odm{
+    class Controller : public QThread
+    {
+        Q_OBJECT
+    public:
+        explicit Controller(QObject *parent = 0);
+        void launch();
+        virtual void run();
+    signals:
+        void queued_recieveData();
+        void queued_prepareData();
+    private:
+        QThread rThread;
+        QThread tThread;
+        Receiver reciever;
+        Dispencer dispencer;
+    };
+}
+
+#endif // CONTROLLER_H
