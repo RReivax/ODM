@@ -7,6 +7,7 @@
 odm::Dispenser::Dispenser(QObject *parent) : QObject(parent)
 {
 
+
 }
 
 /**

@@ -6,7 +6,29 @@
  */
 odm::Receiver::Receiver(QObject *parent) : QObject(parent)
 {
-
+    tcpServer = new QTcpServer(this);
+    if (!tcpServer->listen()) {
+        qDebug() << Q_FUNC_INFO <<  "Unable to start the server";
+        return;
+    }
+    QString ipAddress;
+    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+    // use the first non-localhost IPv4 address
+    for (int i = 0; i < ipAddressesList.size(); ++i) {
+        if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
+            ipAddressesList.at(i).toIPv4Address()) {
+            ipAddress = ipAddressesList.at(i).toString();
+            break;
+        }
+    }
+    // if we did not find one, use IPv4 localhost
+    if (ipAddress.isEmpty())
+        ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
+    statusLabel=tr("The server is running on\n\nIP: %1\nport: %2\n\n")
+                         .arg(ipAddress).arg(tcpServer->serverPort());
+    qDebug() << Q_FUNC_INFO << statusLabel;
+    connect(tcpServer, SIGNAL(newConnection()), this, SIGNAL(gotData()));
+    qDebug() << tcpServer->serverAddress();
 }
 
 /**
@@ -14,9 +36,13 @@ odm::Receiver::Receiver(QObject *parent) : QObject(parent)
  * @brief odm::Receiver::recieveData
  */
 void odm::Receiver::recieveData(){
+    QTcpSocket* connection=tcpServer->nextPendingConnection();
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
-
-    emit endOfReception();
+    if(connection!=0)
+    {
+         qDebug() << connection;
+    }
+    //emit endOfReception();
 }
 
 /**

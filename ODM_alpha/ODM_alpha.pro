@@ -1,6 +1,6 @@
 QT += core
 QT -= gui
-
+QT += network
 CONFIG += c++11
 
 TARGET = ODM_alpha

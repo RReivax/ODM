@@ -6,6 +6,9 @@
 #include <QDebug>
 #include <QVector>
 #include <QStack>
+#include <QTcpServer>
+#include <QNetworkInterface>
+#include <QHostAddress>
 
 #include "data_id.h"
 
@@ -20,10 +23,13 @@ namespace odm {
             void transferData(QVector<data_id>);
             void endOfReception();
             void noDataToTransfer();
+            void gotData();
         public slots:
             void prepareData();
             void recieveData();
         private:
+            QTcpServer *tcpServer;
+            QString statusLabel;
             QVector<QStack<data_id>> stacks;
     };
 }
