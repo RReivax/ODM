@@ -6,12 +6,21 @@
 #include <QDebug>
 #include <QVector>
 #include <QStack>
+
 #include <QMap>
-#include <QHostAddress>
+#include <QTcpServer>
+#include <QNetworkInterface>
+
+//#include <QHostAddress>
 
 #include "data_id.h"
 
 namespace odm {
+    typedef struct ip_time{
+            quint32 addr;
+            int timestamp;
+    }ip_time;
+
     class Receiver : public QObject
     {
         Q_OBJECT
@@ -22,18 +31,16 @@ namespace odm {
             void transferData(QVector<data_id>);
             void endOfReception();
             void noDataToTransfer();
+            void gotData();
         public slots:
             void prepareData();
             void recieveData();
         private:
+            QTcpServer *tcpServer;
+            QString statusLabel;
             QVector<QStack<data_id>> stacks;
             QMap<int,ip_time> id_assoc;
     };
-
-    typedef struct ip_time{
-        quint32 addr;
-        int timestamp;
-    }ip_time;
 }
 
 #endif // Receiver_H
