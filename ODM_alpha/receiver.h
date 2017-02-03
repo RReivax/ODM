@@ -6,6 +6,8 @@
 #include <QDebug>
 #include <QVector>
 #include <QStack>
+#include <QMap>
+#include <QHostAddress>
 
 #include "data_id.h"
 
@@ -25,7 +27,13 @@ namespace odm {
             void recieveData();
         private:
             QVector<QStack<data_id>> stacks;
+            QMap<int,ip_time> id_assoc;
     };
+
+    typedef struct ip_time{
+        quint32 addr;
+        int timestamp;
+    }ip_time;
 }
 
 #endif // Receiver_H
