@@ -6,6 +6,10 @@
 #include <QDebug>
 #include <QVector>
 #include <QStack>
+#include <QtXml>
+#include <QMap>
+#include <QVariant>
+#include <QString>
 
 #include "data_id.h"
 
@@ -15,13 +19,17 @@ namespace odm {
         Q_OBJECT
     public:
         explicit Dispenser(QObject *parent = 0);
+        QVector<QMap<QString, QVariant>> state;
+        QMap<QString, QVariant> params;
     private:
+        void initStateParams();
         //dataset structure/class for real time data
 
     signals:
         void requestData();
     public slots:
         void processData(QVector<data_id>);
+        void shareState();
     };
 }
 

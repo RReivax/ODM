@@ -35,7 +35,7 @@ odm::Receiver::Receiver(QObject *parent) : QObject(parent)
  * Receives data from plugins and stack it.
  * @brief odm::Receiver::recieveData
  */
-void odm::Receiver::recieveData(){
+void odm::Receiver::receiveData(){
     QTcpSocket* connection=tcpServer->nextPendingConnection();
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
     if(connection!=0)

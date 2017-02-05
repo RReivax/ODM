@@ -34,7 +34,7 @@ namespace odm {
             void gotData();
         public slots:
             void prepareData();
-            void recieveData();
+            void receiveData();
         private:
             QTcpServer *tcpServer;
             QString statusLabel;
