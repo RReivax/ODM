@@ -10,7 +10,7 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
     dispenser.moveToThread(&tThread);
 
     qRegisterMetaType<QVector<data_id>>("QVector<data_id>");
-    QObject::connect(&rThread, SIGNAL(started()), &reciever, SLOT(recieveData()));
+    QObject::connect(&rThread, SIGNAL(started()), &reciever, SLOT(startServer()));
     QObject::connect(&tThread, SIGNAL(started()), &dispenser, SIGNAL(requestData()));
 
     QObject::connect(&dispenser, SIGNAL(requestData()), this, SIGNAL(queued_prepareData()));

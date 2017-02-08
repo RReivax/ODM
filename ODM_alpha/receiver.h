@@ -33,10 +33,12 @@ namespace odm {
             void noDataToTransfer();
             void gotData();
         public slots:
+            void startServer();
+
             void prepareData();
             void recieveData();
 
-            void initTransfer(quint32 addr);
+            void initTransfer(QHostAddress host);
             void stackData(data_id toStack);
         private:
             QTcpServer *tcpServer;

@@ -4,9 +4,11 @@
  * @brief odm::Receiver::Receiver
  * @param parent
  */
-odm::Receiver::Receiver(QObject *parent) : QObject(parent)
-{
-    tcpServer = new QTcpServer(this);
+odm::Receiver::Receiver(QObject *parent) : QObject(parent) {
+   tcpServer = new QTcpServer(this);
+}
+
+void odm::Receiver::startServer(){
     if (!tcpServer->listen()) {
         qDebug() << Q_FUNC_INFO <<  "Unable to start the server";
         return;
@@ -29,6 +31,8 @@ odm::Receiver::Receiver(QObject *parent) : QObject(parent)
     qDebug() << Q_FUNC_INFO << statusLabel;
     connect(tcpServer, SIGNAL(newConnection()), this, SIGNAL(gotData()));
     qDebug() << tcpServer->serverAddress();
+
+    recieveData();
 }
 
 /**
@@ -50,7 +54,7 @@ void odm::Receiver::recieveData(){
  * @brief odm::Receiver::prepareData
  */
 void odm::Receiver::prepareData(){
-    qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
+   //qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
     QVector<data_id> dataset;
 
@@ -64,10 +68,10 @@ void odm::Receiver::prepareData(){
         emit transferData(dataset);
 }
 
-void odm::Receiver::initTransfer(){
+void odm::Receiver::initTransfer(QHostAddress host){
 
 }
 
-void odm::Receiver::stackData(){
+void odm::Receiver::stackData(data_id toStack){
 
 }
