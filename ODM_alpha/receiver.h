@@ -16,8 +16,8 @@
 #include "data_id.h"
 
 namespace odm {
-    typedef struct ip_time{
-            quint32 addr;
+    typedef struct addr_time{
+            QHostAddress host;
             int timestamp;
     }ip_time;
 
@@ -35,11 +35,14 @@ namespace odm {
         public slots:
             void prepareData();
             void recieveData();
+
+            void initTransfer(quint32 addr);
+            void stackData(data_id toStack);
         private:
             QTcpServer *tcpServer;
             QString statusLabel;
             QVector<QStack<data_id>> stacks;
-            QMap<int,ip_time> id_assoc;
+            QMap<int,addr_time> idAssoc;
     };
 }
 

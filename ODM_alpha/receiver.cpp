@@ -63,3 +63,11 @@ void odm::Receiver::prepareData(){
     else
         emit transferData(dataset);
 }
+
+void odm::Receiver::initTransfer(){
+
+}
+
+void odm::Receiver::stackData(){
+
+}
