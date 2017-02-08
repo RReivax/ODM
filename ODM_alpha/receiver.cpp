@@ -50,7 +50,7 @@ void odm::Receiver::recieveData(){
  * @brief odm::Receiver::prepareData
  */
 void odm::Receiver::prepareData(){
-    qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
+    //qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
     QVector<data_id> dataset;
 
@@ -64,10 +64,10 @@ void odm::Receiver::prepareData(){
         emit transferData(dataset);
 }
 
-void odm::Receiver::initTransfer(){
+void odm::Receiver::initTransfer(quint32 addr){
 
 }
 
-void odm::Receiver::stackData(){
+void odm::Receiver::stackData(data_id toStack){
 
 }

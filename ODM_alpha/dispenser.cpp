@@ -18,9 +18,16 @@ odm::Dispenser::Dispenser(QObject *parent) : QObject(parent)
 void odm::Dispenser::processData(QVector<data_id> dataset){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
-    foreach (data_id tuple, dataset) {
+    /*foreach (data_id tuple, dataset) {
         qDebug() << tuple.id << " --> " << tuple.data;
-    }
+    }*/
+    lock.lockForWrite();
+    state_test++;
+    lock.unlock();
 
     emit requestData();
+}
+
+void odm::Dispenser::AnswerState(){
+    emit dispenseState(&state_test, &lock);
 }
