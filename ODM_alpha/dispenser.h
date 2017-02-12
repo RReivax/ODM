@@ -19,8 +19,8 @@ namespace odm {
         Q_OBJECT
     public:
         explicit Dispenser(QObject *parent = 0);
-        QVector<QMap<QString, QVariant>> state;
-        QMap<QString, QVariant> params;
+        QVector<QVariantMap> state;
+        QMap<QString, QChar> params;
     private:
         void initStateParams();
         //dataset structure/class for real time data

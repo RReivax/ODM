@@ -10,6 +10,8 @@
 #include <QMap>
 #include <QTcpServer>
 #include <QNetworkInterface>
+#include <QFile>
+#include <QJsonDocument>
 
 //#include <QHostAddress>
 

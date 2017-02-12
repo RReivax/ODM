@@ -6,7 +6,7 @@
  */
 odm::Dispenser::Dispenser(QObject *parent) : QObject(parent)
 {
-    state = QVector<QMap<QString, QVariant>>();
+    state = QVector<QVariantMap>();
     initStateParams();
 }
 
@@ -18,13 +18,13 @@ odm::Dispenser::Dispenser(QObject *parent) : QObject(parent)
 void odm::Dispenser::initStateParams(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
-    QFile config("C:/Users/Gauthier/Documents/Scolaire/ING4/PPE/Git/ODM_alpha/config.xml");
+    QFile config("C:/Users/Gauthier/Documents/Scolaire/ING4/PPE/Git/build-ODM_alpha-Desktop_Qt_5_7_0_MinGW_32bit-Debug/debug/config.xml");
     QDomDocument dom;
     QDomNode node;
     QDomElement docElem;
     QDomElement elem;
     QString n;
-    //QVariant t;
+    QChar t;
 
     if(!config.open(QIODevice::ReadOnly)){
         qDebug() << Q_FUNC_INFO << config.error();
@@ -43,11 +43,17 @@ void odm::Dispenser::initStateParams(){
         elem = node.toElement();
         n = elem.attribute("name", "notFound");
         if(n != "notFound"){
-            qDebug() << Q_FUNC_INFO << n;
-            //t = elem.attribute("type"); unused value type, is it necessary?
-            params.insert(n,QVariant());
+            t = elem.attribute("type", " ").at(0);
+            if(t != ' '){
+                params.insert(n, t);
+            }
         }
         node = node.nextSibling();
+    }
+    QMapIterator<QString, QChar> i(params);
+    while(i.hasNext()){
+        i.next();
+        qDebug() << i.key() << "-->" << i.value();
     }
 }
 
@@ -57,10 +63,44 @@ void odm::Dispenser::initStateParams(){
  * @param dataset
  */
 void odm::Dispenser::processData(QVector<data_id> dataset){
+    QVariantMap tmp;
+    int i;
+    bool idExists = false;
+
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
     foreach (data_id tuple, dataset) {
         qDebug() << tuple.id << " --> " << tuple.data;
+        tmp = tuple.data.toVariantMap();
+        tmp.insert("id", tuple.id);
+
+        //converting param date to QDate
+        if(tmp["date"].canConvert<QDateTime>()){
+            tmp["date"] = tmp["date"].toDateTime();
+            //setting the most recent value for id as real time
+            for(i=0;i<state.size();i++){
+                if(tmp["id"] == state[i]["id"] && tmp["date"] > state[i]["date"]){
+                    state[i] = tmp;
+                    idExists = true;
+                }
+            }
+            if(!idExists){
+                state.append(tmp);
+            }
+            tmp.clear();
+        }else{
+            qDebug() << "Date format error";
+        }
+    }
+
+    //debugging
+    QMap<QString, QVariant> param;
+    foreach (param, state) {
+        QMapIterator<QString, QVariant> it = QMapIterator<QString, QVariant>(param);
+        while(it.hasNext()){
+            it.next();
+            qDebug() << it.key() << "-->" << it.value();
+        }
     }
 
     emit requestData();
@@ -68,7 +108,7 @@ void odm::Dispenser::processData(QVector<data_id> dataset){
 
 /**
  * Sends the realtime vector reference to an application.
- * @brief odm::Dispenser::shareStacks
+ * @brief odm::Dispenser::shareState
  */
 
 void odm::Dispenser::shareState(){
