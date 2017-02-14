@@ -14,7 +14,9 @@ TEMPLATE = app
 SOURCES += main.cpp \
     receiver.cpp \
     controller.cpp \
-    dispenser.cpp
+    dispenser.cpp \
+    application.cpp \
+    app_test.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -31,4 +33,6 @@ HEADERS += \
     data_id.h \
     receiver.h \
     controller.h \
-    dispenser.h
+    dispenser.h \
+    application.h \
+    app_test.h

@@ -70,7 +70,7 @@ void odm::Receiver::receiveData(){
  * @brief odm::Receiver::prepareData
  */
 void odm::Receiver::prepareData(){
-   //qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
+    //qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
     QVector<data_id> dataset;
 

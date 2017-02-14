@@ -69,7 +69,7 @@ void odm::Dispenser::processData(QVector<data_id> dataset){
 
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
-    foreach (data_id tuple, dataset) {
+    /*foreach (data_id tuple, dataset) {
         qDebug() << tuple.id << " --> " << tuple.data;
         tmp = tuple.data.toVariantMap();
         tmp.insert("id", tuple.id);
@@ -101,16 +101,19 @@ void odm::Dispenser::processData(QVector<data_id> dataset){
             it.next();
             qDebug() << it.key() << "-->" << it.value();
         }
-    }
+    }*/
+    lock.lockForWrite();
+    state_test++;
+    lock.unlock();
 
     emit requestData();
 }
 
 /**
  * Sends the realtime vector reference to an application.
- * @brief odm::Dispenser::shareState
+ * @brief odm::Dispenser::AnswerState
  */
 
-void odm::Dispenser::shareState(){
-
+void odm::Dispenser::AnswerState(){
+    emit dispenseState(&state_test, &lock);
 }
