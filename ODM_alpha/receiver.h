@@ -10,6 +10,8 @@
 #include <QMap>
 #include <QTcpServer>
 #include <QNetworkInterface>
+#include <QFile>
+#include <QJsonDocument>
 
 //#include <QHostAddress>
 
@@ -34,12 +36,11 @@ namespace odm {
             void gotData();
         public slots:
             void startServer();
-
             void prepareData();
-            void recieveData();
-
             void initTransfer(QHostAddress host);
             void stackData(data_id toStack);
+            void receiveData();
+
         private:
             QTcpServer *tcpServer;
             QString statusLabel;

@@ -1,6 +1,7 @@
 QT += core
 QT -= gui
 QT += network
+QT += xml
 
 CONFIG += c++11
 
