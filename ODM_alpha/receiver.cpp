@@ -40,10 +40,9 @@ void odm::Receiver::startServer(){
  * @brief odm::Receiver::recieveData
  */
 void odm::Receiver::recieveData(){
-    QTcpSocket* connection=tcpServer->nextPendingConnection();
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
-    if(connection!=0)
-    {
+    QTcpSocket* connection=tcpServer->nextPendingConnection();
+    if(connection!=0) {
          qDebug() << connection;
     }
     //emit endOfReception();
