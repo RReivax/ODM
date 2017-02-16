@@ -1,26 +1,12 @@
 #ifndef Receiver_H
 #define Receiver_H
 
-#include <QObject>
-#include <QThread>
-#include <QDebug>
-#include <QVector>
-#include <QStack>
-
-#include <QMap>
-#include <QTcpServer>
-#include <QNetworkInterface>
-
-//#include <QHostAddress>
+#include <QtCore>
+#include <QtNetwork>
 
 #include "data_id.h"
 
 namespace odm {
-    typedef struct addr_time{
-            QHostAddress host;
-            int timestamp;
-    }ip_time;
-
     class Receiver : public QObject
     {
         Q_OBJECT
@@ -28,23 +14,28 @@ namespace odm {
         public:
             explicit Receiver(QObject *parent = 0);
         signals:
-            void transferData(QVector<data_id>);
+            void transferData(QVector<QJsonObject>);
             void endOfReception();
             void noDataToTransfer();
-            void gotData();
+
+            void dataReceived(QByteArray);
         public slots:
             void startServer();
 
+            void newClient();
+            void disconnected();
+            void readSocket();
+
             void prepareData();
             void recieveData();
-
-            void initTransfer(QHostAddress host);
-            void stackData(data_id toStack);
+            void stackData(QByteArray toStack);
         private:
             QTcpServer *tcpServer;
+            QHash<QTcpSocket*, QByteArray*> buffers; //We need a buffer to store data until block has completely received
             QString statusLabel;
-            QVector<QStack<data_id>> stacks;
-            QMap<int,addr_time> idAssoc;
+
+            QMap<QString,QStack<QJsonObject>> flightData;
+
     };
 }
 
