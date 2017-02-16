@@ -11,6 +11,7 @@
 #include "data_id.h"
 #include "receiver.h"
 #include "dispenser.h"
+#include "application.h"
 #include "app_test.h"
 
 namespace odm{

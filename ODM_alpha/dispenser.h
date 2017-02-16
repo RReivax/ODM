@@ -22,8 +22,6 @@ namespace odm {
         explicit Dispenser(QObject *parent = 0);
         QVector<QVariantMap> state;
         QMap<QString, QChar> params;
-        QVector<QMap<QString,QVariant>> state;
-        int state_test;
         QReadWriteLock lock;
 
     private:
@@ -32,9 +30,8 @@ namespace odm {
 
     signals:
         void requestData();
-        void dispenseState(int*, QReadWriteLock*);
+        void dispenseState(QVector<QVariantMap>*, QReadWriteLock*);
     public slots:
-        void AnswerState();
         void processData(QVector<data_id>);
         void shareState();
     };

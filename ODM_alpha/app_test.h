@@ -11,9 +11,9 @@
 
 class app_test : public Application
 {
-public:
-    app_test();
-    void test();
+    public:
+        app_test();
+        void test();
 };
 
 #endif // APP_TEST_H

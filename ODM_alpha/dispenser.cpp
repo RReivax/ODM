@@ -11,7 +11,7 @@ odm::Dispenser::Dispenser(QObject *parent) : QObject(parent)
 }
 
 /**
- * Creates the state vector depending on the 
+ * Creates the state map depending on the config.xml file
  * @brief odm::Dispenser::initDataStructure
  */
 
@@ -67,9 +67,13 @@ void odm::Dispenser::processData(QVector<data_id> dataset){
     int i;
     bool idExists = false;
 
+    QWriteLocker write_lock(&lock);
+
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
-    /*foreach (data_id tuple, dataset) {
+    //lock.lockForWrite();
+
+    foreach (data_id tuple, dataset) {
         qDebug() << tuple.id << " --> " << tuple.data;
         tmp = tuple.data.toVariantMap();
         tmp.insert("id", tuple.id);
@@ -101,19 +105,12 @@ void odm::Dispenser::processData(QVector<data_id> dataset){
             it.next();
             qDebug() << it.key() << "-->" << it.value();
         }
-    }*/
-    lock.lockForWrite();
-    state_test++;
-    lock.unlock();
+    }
+    //lock.unlock();
 
     emit requestData();
 }
 
-/**
- * Sends the realtime vector reference to an application.
- * @brief odm::Dispenser::AnswerState
- */
-
-void odm::Dispenser::AnswerState(){
-    emit dispenseState(&state_test, &lock);
+void odm::Dispenser::shareState(){
+    emit dispenseState(&state, &lock);
 }

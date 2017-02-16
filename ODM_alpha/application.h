@@ -14,13 +14,14 @@ class Application : public QObject
 public:
     Application();
 signals:
-    void requestRt();
+    void requestState();
 public slots:
-    void getRt(int*, QReadWriteLock*);
+    static void getState(QVector<QVariantMap>*, QReadWriteLock*);
+    bool updateState();
 protected:
-    int *rt_ref;
-    QReadWriteLock *rt_lock;
-    int rt;
+    static QVector<QVariantMap> *state_ref;
+    static QReadWriteLock *state_lock;
+    QVector<QVariantMap> state;
 };
 
 #endif // APPLICATION_H

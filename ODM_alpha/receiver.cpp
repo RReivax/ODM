@@ -6,6 +6,22 @@
  */
 odm::Receiver::Receiver(QObject *parent) : QObject(parent) {
    tcpServer = new QTcpServer(this);
+   //for testing purposes in dispenser
+   QByteArray val;
+   QFile file("C:/Users/Gauthier/Documents/Scolaire/ING4/PPE/Git/build-ODM_alpha-Desktop_Qt_5_7_0_MinGW_32bit-Debug/debug/test.json");
+   if(!file.open(QIODevice::ReadOnly)){
+       qDebug() << Q_FUNC_INFO << file.error();
+       return;
+   }else{
+       val = file.readAll();
+       file.close();
+       //qWarning() << val;
+       QJsonDocument d = QJsonDocument::fromJson(val);
+       QJsonObject test = d.object();
+       QStack<data_id> s;
+       s.push(data_id(1, test));
+       stacks.append(s);
+   }
 }
 
 void odm::Receiver::startServer(){
@@ -33,22 +49,6 @@ void odm::Receiver::startServer(){
     qDebug() << tcpServer->serverAddress();
 
     //receiveData();
-    //for testing purposes in dispenser
-    QByteArray val;
-    QFile file("C:/Users/Gauthier/Documents/Scolaire/ING4/PPE/Git/build-ODM_alpha-Desktop_Qt_5_7_0_MinGW_32bit-Debug/debug/test.json");
-    if(!file.open(QIODevice::ReadOnly)){
-        qDebug() << Q_FUNC_INFO << file.error();
-        return;
-    }else{
-        val = file.readAll();
-        file.close();
-        qWarning() << val;
-        QJsonDocument d = QJsonDocument::fromJson(val);
-        QJsonObject test = d.object();
-        QStack<data_id> s;
-        s.push(data_id(1, test));
-        stacks.append(s);
-    }
 }
 
 /**

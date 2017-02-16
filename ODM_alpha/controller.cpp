@@ -13,6 +13,7 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
     qRegisterMetaType<QVector<data_id>>("QVector<data_id>");
     QObject::connect(&rThread, SIGNAL(started()), &receiver, SLOT(receiveData()));
     QObject::connect(&tThread, SIGNAL(started()), &dispenser, SIGNAL(requestData()));
+    QObject::connect(&tThread, SIGNAL(started()), &dispenser, SLOT(shareState()));
 
     QObject::connect(&dispenser, SIGNAL(requestData()), this, SIGNAL(queued_prepareData()));
     QObject::connect(&receiver, SIGNAL(noDataToTransfer()), this, SIGNAL(queued_prepareData()));
@@ -23,8 +24,7 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
     QObject::connect(&receiver, SIGNAL(transferData(QVector<data_id>)), &dispenser, SLOT(processData(QVector<data_id>)));
 
     //Application connection
-    QObject::connect(&apptest, SIGNAL(requestRt()), &dispenser, SLOT(AnswerState()));
-    QObject::connect(&dispenser, SIGNAL(dispenseState(int*,QReadWriteLock*)), &apptest, SLOT(getRt(int*,QReadWriteLock*)));
+    QObject::connect(&dispenser, &Dispenser::dispenseState, &Application::getState);
 }
 
 /**
@@ -45,7 +45,7 @@ void odm::Controller::launch(){
     this->moveToThread(this);
     this->start();
 
-    //rThread.start();
+    rThread.start();
     tThread.start();
     apptestThread.start();
     apptest.test();
