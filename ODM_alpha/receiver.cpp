@@ -63,23 +63,49 @@ void odm::Receiver::newClient(){
         QTcpSocket* socket=tcpServer->nextPendingConnection();
 
         qDebug() << socket;
-        connect(socket, SIGNAL(readyRead()), this, SLOT(readSocket()));
-        //connect(socket, SIGNAL(readyRead()), this, SLOT(InitClient()));
+        connect(socket, SIGNAL(readyRead()), this, SLOT(InitClient()));
         connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
 
         QByteArray *buffer = new QByteArray();
         buffers.insert(socket, buffer);
     }
 }
-
+/**
+ * @brief odm::Receiver::InitClient
+ *
+ * Initialisation process with the pluggin
+ */
 void odm::Receiver::InitClient(){
+
     QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
+    QByteArray *buffer = buffers.value(socket);
+    QObject::disconnect(socket, SIGNAL(readyRead()), this, SLOT(InitClient()));
+    bool error=false;
 
-    //foreach flightData.keys()
+    while (socket->bytesAvailable() > 0) {
+        buffer->append(socket->readAll());
+    }
+    if (!QJsonDocument::fromJson(*buffer).isNull()){
+        qDebug() << "New new client";
+        QJsonObject newClient = QJsonDocument::fromJson(*buffer).object();
+        for( QList<QString>::Iterator name = flightData.keys().begin(); name!= flightData.keys().end() ; name++ )
+        {
+            if(*name == newClient.value("name").toString())
+            {
+                if(socket->write("ERROR")<0)
+                    qDebug()<<"Fail to send Error message";
+                socket->abort();
+                error=true;
+            }
+        }
+    }
+    buffer->clear();
 
-    if(true){
-       // QObject::disconnect();
-       // QObject::connect(...., readSocket);
+    if(!error)
+    {
+        if(socket->write("SUCCESS")<0)
+            qDebug()<<"Fail to send Success message";
+        QObject::connect(socket, SIGNAL(readyRead()), this, SLOT(readSocket()));
     }
 }
 
@@ -133,8 +159,6 @@ void odm::Receiver::prepareData(){
         emit transferData(dataset);
     }
 }
-
-
 void odm::Receiver::stackData(QByteArray toStack){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
     qDebug() << toStack;
