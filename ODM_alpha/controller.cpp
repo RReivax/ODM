@@ -24,7 +24,7 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
     QObject::connect(&receiver, SIGNAL(transferData(QVector<data_id>)), &dispenser, SLOT(processData(QVector<data_id>)));
 
     //Application connection
-    QObject::connect(&dispenser, &Dispenser::dispenseState, &Application::getState);
+    QObject::connect(&dispenser, &odm::Dispenser::dispenseState, &odm::Application::getState);
 }
 
 /**

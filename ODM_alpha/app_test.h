@@ -2,14 +2,8 @@
 #define APP_TEST_H
 
 #include "application.h"
-#include <QObject>
-#include <QThread>
-#include <QDebug>
-#include <QVector>
-#include <QStack>
 
-
-class app_test : public Application
+class app_test : public odm::Application
 {
     public:
         app_test();

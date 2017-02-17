@@ -1,19 +1,10 @@
 #include "dispenser.h"
 
-/**
- * @brief odm::dispenser::dispenser
- * @param parent
- */
 odm::Dispenser::Dispenser(QObject *parent) : QObject(parent)
 {
     state = QVector<QVariantMap>();
     initStateParams();
 }
-
-/**
- * Creates the state map depending on the config.xml file
- * @brief odm::Dispenser::initDataStructure
- */
 
 void odm::Dispenser::initStateParams(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
@@ -57,11 +48,6 @@ void odm::Dispenser::initStateParams(){
     }
 }
 
-/**
- * Updates the realtime dataset.
- * @brief odm::dispenser::processData
- * @param dataset
- */
 void odm::Dispenser::processData(QVector<data_id> dataset){
     QVariantMap tmp;
     int i;
