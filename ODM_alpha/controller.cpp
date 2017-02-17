@@ -6,19 +6,19 @@
  */
 odm::Controller::Controller(QObject *parent) : QThread(parent) {
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
-    reciever.moveToThread(&rThread);
+    receiver.moveToThread(&rThread);
     dispenser.moveToThread(&tThread);
 
-    qRegisterMetaType<QVector<data_id>>("QVector<data_id>");
-    QObject::connect(&rThread, SIGNAL(started()), &reciever, SLOT(startServer()));
+    qRegisterMetaType<QVector<QJsonObject>>("QVector<QJsonObject>");
     QObject::connect(&tThread, SIGNAL(started()), &dispenser, SIGNAL(requestData()));
+    QObject::connect(&rThread, SIGNAL(started()), &receiver, SLOT(startServer()));
 
     QObject::connect(&dispenser, SIGNAL(requestData()), this, SIGNAL(queued_prepareData()));
-    QObject::connect(&reciever, SIGNAL(noDataToTransfer()), this, SIGNAL(queued_prepareData()));
-    QObject::connect(this, SIGNAL(queued_prepareData()), &reciever, SLOT(prepareData()));
-    QObject::connect(this, SIGNAL(queued_recieveData()), &reciever, SLOT(recieveData()));
+    QObject::connect(&receiver, SIGNAL(noDataToTransfer()), this, SIGNAL(queued_prepareData()));
+    QObject::connect(this, SIGNAL(queued_prepareData()), &receiver, SLOT(prepareData()));
 
-    QObject::connect(&reciever, SIGNAL(transferData(QVector<data_id>)), &dispenser, SLOT(processData(QVector<data_id>)));
+
+    QObject::connect(&receiver, SIGNAL(transferData(QVector<QJsonObject>)), &dispenser, SLOT(processData(QVector<QJsonObject>)));
 }
 
 /**

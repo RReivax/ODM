@@ -7,7 +7,6 @@
 #include <QVector>
 #include <QStack>
 
-#include "data_id.h"
 #include "receiver.h"
 #include "dispenser.h"
 
@@ -20,12 +19,12 @@ namespace odm{
         void launch();
         virtual void run();
     signals:
-        void queued_recieveData();
+        void queued_receiveData();
         void queued_prepareData();
     private:
         QThread rThread;
         QThread tThread;
-        Receiver reciever;
+        Receiver receiver;
         Dispenser dispenser;
     };
 }

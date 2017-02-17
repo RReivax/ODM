@@ -4,7 +4,6 @@
 #include <QtCore>
 #include <QtNetwork>
 
-#include "data_id.h"
 
 namespace odm {
     class Receiver : public QObject
@@ -25,9 +24,9 @@ namespace odm {
             void newClient();
             void disconnected();
             void readSocket();
+            void InitClient();
 
             void prepareData();
-            void recieveData();
             void stackData(QByteArray toStack);
         private:
             QTcpServer *tcpServer;
