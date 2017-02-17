@@ -18,7 +18,7 @@ odm::Dispenser::Dispenser(QObject *parent) : QObject(parent)
 void odm::Dispenser::initStateParams(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
-    QFile config("C:/Users/Gauthier/Documents/Scolaire/ING4/PPE/Git/build-ODM_alpha-Desktop_Qt_5_7_0_MinGW_32bit-Debug/debug/config.xml");
+    QFile config("C:/Users/Arnaud/Documents/ECE/ING4/PPE/ODM_alpha/config.xml");
     QDomDocument dom;
     QDomNode node;
     QDomElement docElem;
