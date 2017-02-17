@@ -35,4 +35,5 @@ HEADERS += \
     controller.h \
     dispenser.h \
     application.h \
-    app_test.h
+    app_test.h \
+	app_map.h
