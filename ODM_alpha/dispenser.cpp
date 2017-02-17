@@ -84,12 +84,19 @@ void odm::Dispenser::processData(QVector<QJsonObject> dataset){
             }
             if(!idExists){
                 state.append(tmp);
+                QMapIterator<QString, QVariant> it = QMapIterator<QString, QVariant>(tmp);
+                while(it.hasNext()){
+                    it.next();
+                    qDebug() << it.key() << "-->" << it.value();
+                }
             }
             tmp.clear();
         }else{
             qDebug() << "Date format error";
         }
     }
+
+    /*
 
     //debugging
     QMap<QString, QVariant> param;
@@ -99,7 +106,7 @@ void odm::Dispenser::processData(QVector<QJsonObject> dataset){
             it.next();
             qDebug() << it.key() << "-->" << it.value();
         }
-    }
+    }*/
 
     emit requestData();
 }

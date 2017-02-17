@@ -7,6 +7,7 @@
 odm::Receiver::Receiver(QObject *parent) : QObject(parent) {
    tcpServer = new QTcpServer(this);
    connect(this, SIGNAL(dataReceived(QByteArray)), SLOT(stackData(QByteArray)));
+   dc=0;
 }
 
 void odm::Receiver::startServer(){
@@ -90,11 +91,11 @@ void odm::Receiver::disconnected(){
     socket->deleteLater();
     //Libère nom
     delete buffer;
-
 }
 
 void odm::Receiver::readSocket(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
+    dc++;
     QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
     QByteArray *buffer = buffers.value(socket);
 
@@ -105,9 +106,10 @@ void odm::Receiver::readSocket(){
     if (!QJsonDocument::fromJson(*buffer).isNull()){
         qDebug() << "New object";
         QJsonObject newData = QJsonDocument::fromJson(*buffer).object();
-        flightData["test"].push(newData);
         flightData[newData.value("name").toString()].push(newData);
+        qDebug() << "Size = " << flightData[newData.value("name").toString()].size();
     }
+    qDebug() << "Count = " << dc;
     buffer->clear();
 }
 
@@ -121,7 +123,7 @@ void odm::Receiver::prepareData(){
     QVector<QJsonObject> dataset;
 
     for(QMap<QString, QStack<QJsonObject>>::iterator i = flightData.begin(); i != flightData.end(); i++){
-        if(!i.value().isEmpty()) dataset.push_back(i.value().pop());
+        if(!i.value().isEmpty())dataset.push_back(i.value().pop());
     }
 
     if(dataset.isEmpty()){

@@ -34,6 +34,7 @@ namespace odm {
             QString statusLabel;
 
             QMap<QString,QStack<QJsonObject>> flightData;
+            int dc;
 
     };
 }
