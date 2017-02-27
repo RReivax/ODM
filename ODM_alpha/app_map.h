@@ -3,7 +3,7 @@
 
 #include "application.h"
 
-class app_map : public Application
+class app_map : public odm::Application
 {
 	public:
 		app_map();

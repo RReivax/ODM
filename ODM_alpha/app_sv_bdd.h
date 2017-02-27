@@ -14,7 +14,7 @@
  * on a DB using MySQL. The DB is configured with the information below
  */
 
-class app_sv_bdd : public Application
+class app_sv_bdd : public odm::Application
 {
     public:
         app_sv_bdd();
@@ -31,7 +31,7 @@ class app_sv_bdd : public Application
     private:
         const QString DB_HOSTNAME="localhost";
         const QString DB_USERNAME="root";
-        const QString DB_PASSWORD="";
+        const QString DB_PASSWORD="root";
         const QString DB_NAME="odm_db";
         const int TIME_LAPS = 3;
 
