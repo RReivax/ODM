@@ -2,6 +2,7 @@ QT += core
 QT -= gui
 QT += network
 QT += xml
+QT += sql
 
 CONFIG += c++11
 
@@ -16,7 +17,8 @@ SOURCES += main.cpp \
     controller.cpp \
     dispenser.cpp \
     application.cpp \
-    app_test.cpp
+    app_test.cpp \
+    app_sv_bdd.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -35,4 +37,5 @@ HEADERS += \
     controller.h \
     dispenser.h \
     application.h \
-    app_test.h
+    app_test.h \
+    app_sv_bdd.h

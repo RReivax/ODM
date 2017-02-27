@@ -13,6 +13,7 @@
 #include "dispenser.h"
 #include "application.h"
 #include "app_test.h"
+#include "app_sv_bdd.h"
 
 namespace odm{
     class Controller : public QThread
@@ -34,6 +35,9 @@ namespace odm{
         //Applications
         app_test apptest;
         QThread apptestThread;
+
+        app_sv_bdd appsvbdd;
+        QThread appsvbddThread;
     };
 }
 
