@@ -14,6 +14,7 @@
 #include "application.h"
 #include "app_test.h"
 #include "app_sv_bdd.h"
+#include "app_map.h"
 
 namespace odm{
     class Controller : public QThread

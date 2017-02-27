@@ -38,4 +38,5 @@ HEADERS += \
     dispenser.h \
     application.h \
     app_test.h \
-    app_sv_bdd.h
+    app_sv_bdd.h \
+    app_map.h
