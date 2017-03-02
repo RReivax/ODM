@@ -10,6 +10,11 @@
 #include "receiver.h"
 #include "dispenser.h"
 
+#include "application.h"
+#include "app_sv_bdd.h"
+#include "app_map.h"
+
+
 namespace odm{
     class Controller : public QThread
     {
@@ -26,6 +31,10 @@ namespace odm{
         QThread tThread;
         Receiver receiver;
         Dispenser dispenser;
+
+        //Applications
+        app_sv_bdd appsvbdd;
+        QThread appsvbddThread;
     };
 }
 

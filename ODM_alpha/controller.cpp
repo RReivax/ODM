@@ -8,10 +8,14 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
     receiver.moveToThread(&rThread);
     dispenser.moveToThread(&tThread);
+    appsvbdd.moveToThread(&appsvbddThread);
 
     qRegisterMetaType<QVector<QJsonObject>>("QVector<QJsonObject>");
     QObject::connect(&tThread, SIGNAL(started()), &dispenser, SIGNAL(requestData()));
     QObject::connect(&rThread, SIGNAL(started()), &receiver, SLOT(startServer()));
+
+    QObject::connect(&tThread, SIGNAL(started()), &dispenser, SLOT(shareState()));
+
 
     QObject::connect(&dispenser, SIGNAL(requestData()), this, SIGNAL(queued_prepareData()));
     QObject::connect(&receiver, SIGNAL(noDataToTransfer()), this, SIGNAL(queued_prepareData()));
@@ -19,6 +23,9 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
 
 
     QObject::connect(&receiver, SIGNAL(transferData(QVector<QJsonObject>)), &dispenser, SLOT(processData(QVector<QJsonObject>)));
+
+    //Application connection
+    QObject::connect(&dispenser, &odm::Dispenser::dispenseState, &odm::Application::getState);
 }
 
 /**
@@ -39,7 +46,12 @@ void odm::Controller::launch(){
     this->moveToThread(this);
     this->start();
 
-    rThread.start();
+    //rThread.start();
     tThread.start();
-}
 
+    //apptestThread.start();
+    appsvbddThread.start();
+
+    //apptest.test();
+    appsvbdd.start();
+}

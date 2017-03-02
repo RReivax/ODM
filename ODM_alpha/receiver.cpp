@@ -6,6 +6,7 @@
  */
 odm::Receiver::Receiver(QObject *parent) : QObject(parent) {
    tcpServer = new QTcpServer(this);
+
    connect(this, SIGNAL(dataReceived(QByteArray)), SLOT(stackData(QByteArray)));
    dc=0;
 }
@@ -34,7 +35,7 @@ void odm::Receiver::startServer(){
     connect(tcpServer, SIGNAL(newConnection()), this, SLOT(newClient()));
     qDebug() << tcpServer->serverAddress();
 
-    //receiveData();
+
     //for testing purposes in dispenser
    /* QByteArray val;
     //QFile file("C:/Users/Gauthier/Documents/Scolaire/ING4/PPE/Git/build-ODM_alpha-Desktop_Qt_5_7_0_MinGW_32bit-Debug/debug/test.json");

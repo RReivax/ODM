@@ -1,24 +1,15 @@
 #include "dispenser.h"
 
-/**
- * @brief odm::dispenser::dispenser
- * @param parent
- */
 odm::Dispenser::Dispenser(QObject *parent) : QObject(parent)
 {
     state = QVector<QVariantMap>();
     initStateParams();
 }
 
-/**
- * Creates the state vector depending on the 
- * @brief odm::Dispenser::initDataStructure
- */
-
 void odm::Dispenser::initStateParams(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
-    QFile config("C:/Users/Gauthier/Documents/Scolaire/ING4/PPE/Git/build-ODM_alpha-Desktop_Qt_5_7_0_MinGW_32bit-Debug/debug/config.xml");
+    QFile config("C:/Users/Arnaud/Documents/ECE/ING4/PPE/ODM_alpha/config.xml");
     QDomDocument dom;
     QDomNode node;
     QDomElement docElem;
@@ -67,6 +58,8 @@ void odm::Dispenser::processData(QVector<QJsonObject> dataset){
     int i;
     bool idExists = false;
 
+    QWriteLocker write_lock(&lock);
+
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
     foreach (QJsonObject tuple, dataset) {
@@ -111,11 +104,7 @@ void odm::Dispenser::processData(QVector<QJsonObject> dataset){
     emit requestData();
 }
 
-/**
- * Sends the realtime vector reference to an application.
- * @brief odm::Dispenser::shareState
- */
 
 void odm::Dispenser::shareState(){
-
+    emit dispenseState(&state, &lock);
 }
