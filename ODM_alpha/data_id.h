@@ -1,6 +1,6 @@
 #ifndef DATA_ID_H
 #define DATA_ID_H
-#include <QJsonObject>
+/*#include <QJsonObject>
 
 namespace odm{
     typedef struct data_id{
@@ -10,5 +10,6 @@ namespace odm{
         data_id():id(-1), data(){}
     } data_id;
 }
+*/
 
 #endif // DATA_ID_H

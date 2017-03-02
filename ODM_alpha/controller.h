@@ -6,14 +6,14 @@
 #include <QDebug>
 #include <QVector>
 #include <QStack>
-#include <application.h>
 
-#include "data_id.h"
 #include "receiver.h"
 #include "dispenser.h"
+
 #include "application.h"
-#include "app_test.h"
+#include "app_sv_bdd.h"
 #include "app_map.h"
+
 
 namespace odm{
     class Controller : public QThread
@@ -33,8 +33,8 @@ namespace odm{
         Dispenser dispenser;
 
         //Applications
-        app_test apptest;
-        QThread apptestThread;
+        app_sv_bdd appsvbdd;
+        QThread appsvbddThread;
     };
 }
 

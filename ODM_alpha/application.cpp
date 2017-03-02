@@ -1,25 +1,28 @@
 #include "application.h"
 
-QVector<QVariantMap>* Application::state_ref = NULL;
-QReadWriteLock* Application::state_lock = NULL;
 
-Application::Application(){
+
+QVector<QVariantMap>* odm::Application::state_ref = NULL;
+QReadWriteLock* odm::Application::state_lock = NULL;
+
+odm::Application::Application(){
 
 }
 
-void Application::getState(QVector<QVariantMap> *rt_table, QReadWriteLock *l){
+void odm::Application::getState(QVector<QVariantMap> *rt_table, QReadWriteLock *lo){
     if(state_ref == NULL){
-        qDebug() << Q_FUNC_INFO;
         Application::state_ref = rt_table;
-        Application::state_lock = l;
+        Application::state_lock = lo;
     }
 }
 
-bool Application::updateState(){
+bool odm::Application::updateState(){
+    //locking the QVector<QVariantMap> dispenser.state for reading
     QReadLocker read_lock(state_lock);
+    //if the pointer to state is set
     if(state_ref != NULL){
+        //copying dispenser.state to this.state
         state = *state_ref;
-        qDebug() << state_ref << state_lock;
         return true;
     }
     return false;

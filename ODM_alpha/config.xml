@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DataTypes>
 	<!-- The 5 first parameters are mendatory for ODM to run properly -->
-	<param name="id" type="int" />
 	<param name="latitude" type="double" />
 	<param name="longitude" type="double" />
 	<param name="altitude" type="double" />
-	<param name="date" type="int" />
+	<param name="date" type="time" />
 	<!-- You can add more parameters below for your applications -->
 </DataTypes>

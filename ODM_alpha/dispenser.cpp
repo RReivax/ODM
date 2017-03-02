@@ -1,24 +1,15 @@
 #include "dispenser.h"
 
-/**
- * @brief odm::dispenser::dispenser
- * @param parent
- */
 odm::Dispenser::Dispenser(QObject *parent) : QObject(parent)
 {
     state = QVector<QVariantMap>();
     initStateParams();
 }
 
-/**
- * Creates the state map depending on the config.xml file
- * @brief odm::Dispenser::initDataStructure
- */
-
 void odm::Dispenser::initStateParams(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
-    QFile config("C:/Users/Gauthier/Documents/Scolaire/ING4/PPE/Git/build-ODM_alpha-Desktop_Qt_5_7_0_MinGW_32bit-Debug/debug/config.xml");
+    QFile config("C:/Users/Arnaud/Documents/ECE/ING4/PPE/ODM_alpha/config.xml");
     QDomDocument dom;
     QDomNode node;
     QDomElement docElem;
@@ -62,7 +53,7 @@ void odm::Dispenser::initStateParams(){
  * @brief odm::dispenser::processData
  * @param dataset
  */
-void odm::Dispenser::processData(QVector<data_id> dataset){
+void odm::Dispenser::processData(QVector<QJsonObject> dataset){
     QVariantMap tmp;
     int i;
     bool idExists = false;
@@ -71,31 +62,34 @@ void odm::Dispenser::processData(QVector<data_id> dataset){
 
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
 
-    //lock.lockForWrite();
-
-    foreach (data_id tuple, dataset) {
-        qDebug() << tuple.id << " --> " << tuple.data;
-        tmp = tuple.data.toVariantMap();
-        tmp.insert("id", tuple.id);
+    foreach (QJsonObject tuple, dataset) {
+        tmp = tuple.toVariantMap();
 
         //converting param date to QDate
         if(tmp["date"].canConvert<QDateTime>()){
             tmp["date"] = tmp["date"].toDateTime();
             //setting the most recent value for id as real time
             for(i=0;i<state.size();i++){
-                if(tmp["id"] == state[i]["id"] && tmp["date"] > state[i]["date"]){
+                if(tmp["name"] == state[i]["name"] && tmp["date"] > state[i]["date"]){
                     state[i] = tmp;
                     idExists = true;
                 }
             }
             if(!idExists){
                 state.append(tmp);
+                QMapIterator<QString, QVariant> it = QMapIterator<QString, QVariant>(tmp);
+                while(it.hasNext()){
+                    it.next();
+                    qDebug() << it.key() << "-->" << it.value();
+                }
             }
             tmp.clear();
         }else{
             qDebug() << "Date format error";
         }
     }
+
+    /*
 
     //debugging
     QMap<QString, QVariant> param;
@@ -105,11 +99,11 @@ void odm::Dispenser::processData(QVector<data_id> dataset){
             it.next();
             qDebug() << it.key() << "-->" << it.value();
         }
-    }
-    //lock.unlock();
+    }*/
 
     emit requestData();
 }
+
 
 void odm::Dispenser::shareState(){
     emit dispenseState(&state, &lock);
