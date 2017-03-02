@@ -3,7 +3,9 @@
 app_test::app_test()
 {
 
+		
 }
+
 
 void app_test::test(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
