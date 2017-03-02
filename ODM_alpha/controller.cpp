@@ -46,7 +46,7 @@ void odm::Controller::launch(){
     this->moveToThread(this);
     this->start();
 
-    //rThread.start();
+    rThread.start();
     tThread.start();
 
     //apptestThread.start();
