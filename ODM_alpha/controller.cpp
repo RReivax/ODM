@@ -6,25 +6,27 @@
  */
 odm::Controller::Controller(QObject *parent) : QThread(parent) {
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
-    reciever.moveToThread(&rThread);
+    receiver.moveToThread(&rThread);
     dispenser.moveToThread(&tThread);
-    apptest.moveToThread(&apptestThread);
+
+    appsvbdd.moveToThread(&appsvbddThread);
+
 
     qRegisterMetaType<QVector<data_id>>("QVector<data_id>");
-    QObject::connect(&rThread, SIGNAL(started()), &reciever, SLOT(recieveData()));
+    QObject::connect(&rThread, SIGNAL(started()), &receiver, SLOT(receiveData()));
     QObject::connect(&tThread, SIGNAL(started()), &dispenser, SIGNAL(requestData()));
+    QObject::connect(&tThread, SIGNAL(started()), &dispenser, SLOT(shareState()));
 
     QObject::connect(&dispenser, SIGNAL(requestData()), this, SIGNAL(queued_prepareData()));
-    QObject::connect(&reciever, SIGNAL(noDataToTransfer()), this, SIGNAL(queued_prepareData()));
-    QObject::connect(this, SIGNAL(queued_prepareData()), &reciever, SLOT(prepareData()));
-    QObject::connect(&reciever, SIGNAL(gotData()), this, SIGNAL(queued_recieveData()));
-    QObject::connect(this, SIGNAL(queued_recieveData()), &reciever, SLOT(recieveData()));
+    QObject::connect(&receiver, SIGNAL(noDataToTransfer()), this, SIGNAL(queued_prepareData()));
+    QObject::connect(this, SIGNAL(queued_prepareData()), &receiver, SLOT(prepareData()));
+    QObject::connect(&receiver, SIGNAL(gotData()), this, SIGNAL(queued_receiveData()));
+    QObject::connect(this, SIGNAL(queued_receiveData()), &receiver, SLOT(receiveData()));
 
-    QObject::connect(&reciever, SIGNAL(transferData(QVector<data_id>)), &dispenser, SLOT(processData(QVector<data_id>)));
+    QObject::connect(&receiver, SIGNAL(transferData(QVector<data_id>)), &dispenser, SLOT(processData(QVector<data_id>)));
 
     //Application connection
-    QObject::connect(&apptest, SIGNAL(requestRt()), &dispenser, SLOT(AnswerState()));
-    QObject::connect(&dispenser, SIGNAL(dispenseState(int*,QReadWriteLock*)), &apptest, SLOT(getRt(int*,QReadWriteLock*)));
+    QObject::connect(&dispenser, &odm::Dispenser::dispenseState, &odm::Application::getState);
 }
 
 /**
@@ -47,6 +49,10 @@ void odm::Controller::launch(){
 
     //rThread.start();
     tThread.start();
-    apptestThread.start();
-    apptest.test();
+
+    //apptestThread.start();
+    appsvbddThread.start();
+
+    //apptest.test();
+    appsvbdd.start();
 }

@@ -6,29 +6,70 @@
 #include <QDebug>
 #include <QVector>
 #include <QStack>
+
+#include <QtXml>
+#include <QMap>
+#include <QVariant>
+#include <QString>
+
 #include <QReadWriteLock>
 
 #include "data_id.h"
 
-namespace odm {
+namespace odm{
+    /**
+     * @class Dispenser
+     * @brief The Dispenser class.
+     */
     class Dispenser : public QObject
     {
         Q_OBJECT
     public:
+        /**
+         * @fn Dispenser()
+         * @brief Dispenser constructor.
+         * @param parent a QObject*
+         */
         explicit Dispenser(QObject *parent = 0);
-        QVector<QMap<QString,QVariant>> state;
-        int state_test;
-        QReadWriteLock lock;
+
+        QVector<QVariantMap> state;/**< The real time drone data set*/
+        QMap<QString, QChar> params;/**< The list of a drone data set parameters*/
+        QReadWriteLock lock;/**< A lock to secure reading/writing in state*/
 
     private:
-        //dataset structure/class for real time data
-
+        /**
+         * @fn void Dispenser::initStateParams()
+         * @brief Settles params by reading in config.xml
+         */
+        void initStateParams();
     signals:
+        /**
+         * @fn Dispenser::requestData()
+         * @brief Calls the slot Receiver::prepareData().
+         *
+         * Indicates that dispenser has finished processing the data.
+         */
         void requestData();
-        void dispenseState(int*, QReadWriteLock*);
+        /**
+         * @fn Dispenser::dispenseState(QVector<QVariantMap>* st, QReadWriteLock* lo)
+         * @brief Calls the slot Application::getState(QVector<QVariantMap>* st, QReadWriteLock* lo).
+         *
+         * Gives pointers to state and lock to the class Application.
+         */
+        void dispenseState(QVector<QVariantMap>* st, QReadWriteLock* lo);
     public slots:
-        void AnswerState();
+        /**
+         * @fn Dispenser::processData(QVector<data_id>)
+         * @brief Updates state with the most recent data set of each drone.
+         *
+         * Gets a data_id for each drone. Stores the one with the most recent date in state[drone].
+         */
         void processData(QVector<data_id>);
+        /**
+         * @fn Dispenser::shareState()
+         * @brief Emits Dispenser::dispenseState(QVector<QVariantMap>* st, QReadWriteLock* lo).
+         */
+        void shareState();
     };
 }
 

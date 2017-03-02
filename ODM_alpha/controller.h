@@ -6,12 +6,15 @@
 #include <QDebug>
 #include <QVector>
 #include <QStack>
-#include <application.h>
 
 #include "data_id.h"
 #include "receiver.h"
 #include "dispenser.h"
-#include "app_test.h"
+
+#include "application.h"
+#include "app_sv_bdd.h"
+#include "app_map.h"
+
 
 namespace odm{
     class Controller : public QThread
@@ -22,17 +25,17 @@ namespace odm{
         void launch();
         virtual void run();
     signals:
-        void queued_recieveData();
+        void queued_receiveData();
         void queued_prepareData();
     private:
         QThread rThread;
         QThread tThread;
-        Receiver reciever;
+        Receiver receiver;
         Dispenser dispenser;
 
         //Applications
-        app_test apptest;
-        QThread apptestThread;
+        app_sv_bdd appsvbdd;
+        QThread appsvbddThread;
     };
 }
 

@@ -4,9 +4,27 @@
  * @brief odm::Receiver::Receiver
  * @param parent
  */
-odm::Receiver::Receiver(QObject *parent) : QObject(parent)
-{
-    tcpServer = new QTcpServer(this);
+odm::Receiver::Receiver(QObject *parent) : QObject(parent) {
+   tcpServer = new QTcpServer(this);
+   //for testing purposes in dispenser
+   QByteArray val;
+   QFile file("C:/Users/Gauthier/Documents/Scolaire/ING4/PPE/Git/ODM_alpha/test.json");
+   if(!file.open(QIODevice::ReadOnly)){
+       qDebug() << Q_FUNC_INFO << file.error();
+       return;
+   }else{
+       val = file.readAll();
+       file.close();
+       //qWarning() << val;
+       QJsonDocument d = QJsonDocument::fromJson(val);
+       QJsonObject test = d.object();
+       QStack<data_id> s;
+       s.push(data_id(1, test));
+       stacks.append(s);
+   }
+}
+
+void odm::Receiver::startServer(){
     if (!tcpServer->listen()) {
         qDebug() << Q_FUNC_INFO <<  "Unable to start the server";
         return;
@@ -29,13 +47,15 @@ odm::Receiver::Receiver(QObject *parent) : QObject(parent)
     qDebug() << Q_FUNC_INFO << statusLabel;
     connect(tcpServer, SIGNAL(newConnection()), this, SIGNAL(gotData()));
     qDebug() << tcpServer->serverAddress();
+
+    //receiveData();
 }
 
 /**
  * Receives data from plugins and stack it.
  * @brief odm::Receiver::recieveData
  */
-void odm::Receiver::recieveData(){
+void odm::Receiver::receiveData(){
     QTcpSocket* connection=tcpServer->nextPendingConnection();
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
     if(connection!=0)
@@ -64,7 +84,7 @@ void odm::Receiver::prepareData(){
         emit transferData(dataset);
 }
 
-void odm::Receiver::initTransfer(quint32 addr){
+void odm::Receiver::initTransfer(QHostAddress host){
 
 }
 
