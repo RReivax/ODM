@@ -4,7 +4,7 @@ extern const QString TABLE_ALT = "altitude";
 extern const QString TABLE_DTE = "date";
 extern const QString TABLE_ID = "id";
 extern const QString TABLE_LONG = "longitude";
-extern const QString MARQUEUR_DEBUG = "****** APP BDD debug : ";
+extern const QString MARKER_DEBUG = "****** APP BDD debug : ";
 
 
 extern const bool DEBUG_ENABLE = true; // True to enable verbose debug mode
@@ -47,19 +47,19 @@ bool app_sv_bdd::init(){
     if(query.exec("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'odm_db' AND TABLE_NAME = 'main';"))
     {
         if(query.next()){
-            if (DEBUG_ENABLE) qDebug() << MARQUEUR_DEBUG << "La table existe !";
+            if (DEBUG_ENABLE) qDebug() << MARQUEUR_DEBUG << "The DB table 'main' exists !";
             return_b = true;
         }
         else {
-            if (DEBUG_ENABLE) qDebug() << MARQUEUR_DEBUG << "Tentative de création de la table";
+            if (DEBUG_ENABLE) qDebug() << MARQUEUR_DEBUG << "Trying to create table 'main'...";
             if (DEBUG_ENABLE) qDebug() << MARQUEUR_DEBUG << "CREATE TABLE main ("+TABLE_ID+" int, "+TABLE_LONG+" double, "+TABLE_LAT+" double, "+TABLE_ALT+" double, position"+TABLE_DTE+" datetime);";
             if (query.exec("CREATE TABLE main ("+TABLE_ID+" int, "+TABLE_LONG+" double, "+TABLE_LAT+" double, "+TABLE_ALT+" double, position"+TABLE_DTE+" datetime);"))
             {
-                if (DEBUG_ENABLE) qDebug() << MARQUEUR_DEBUG << "Cree";
+                if (DEBUG_ENABLE) qDebug() << MARQUEUR_DEBUG << "created";
                 return_b = true;
             }
             else
-                if (DEBUG_ENABLE) qDebug() << MARQUEUR_DEBUG << "Erreur dans la creation de la table";
+                if (DEBUG_ENABLE) qDebug() << MARQUEUR_DEBUG << "Error while creating the table.";
         }
     }
     return return_b;
