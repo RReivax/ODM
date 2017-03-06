@@ -2,7 +2,7 @@ var http = require('http');
 var net = require('net');
 var express = require('express');
 var path = require('path');
-var variable = {'id':0,'latitude':48.8516,'longitude':2.28716};
+var variable ="" ;
 var app = express();
 
 console.log(variable);
@@ -10,6 +10,8 @@ console.log(variable);
 var applicationServer = net.createServer(function(socket){
 	console.log('server connected');
 	socket.on('data', function(data) {
+		data= JSON.parse(data);
+		console.log('server data:\n'+data.id + ' ' +data.latitude+' '+data.longitude);
         variable = data;
     });
 });

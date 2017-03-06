@@ -6,12 +6,6 @@ var marker;
 var posMarker;
 var droneIcon;
 var drones= [];
-/*function moveMarker(){
-
-	posMarker.lat = posMarker.lat - (Math.random()/100000);
-	posMarker.lng = posMarker.lng - (Math.random()/100000);
-	marker.setLatLng(posMarker);
-}*/
 
 function initmap() {
     // set up the map
