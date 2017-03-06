@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     controller.cpp \
     dispenser.cpp \
     application.cpp \
-    app_sv_bdd.cpp
+    app_sv_bdd.cpp \
+    app_map.cpp
 
 
 # The following define makes your compiler emit warnings if you use

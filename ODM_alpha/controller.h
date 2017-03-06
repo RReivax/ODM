@@ -33,8 +33,10 @@ namespace odm{
         Dispenser dispenser;
 
         //Applications
-        app_sv_bdd appsvbdd;
-        QThread appsvbddThread;
+       // app_sv_bdd appsvbdd;
+        //QThread appsvbddThread;
+        app_map appMap;
+        QThread appMapThread;
     };
 }
 

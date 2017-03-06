@@ -12,10 +12,10 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_SQL_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -m64 -pipe -g -std=c++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../ODM_alpha -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -isystem /usr/include/x86_64-linux-gnu/qt5/QtXml -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+INCPATH       = -I../ODM_alpha -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -isystem /usr/include/x86_64-linux-gnu/qt5/QtXml -isystem /usr/include/x86_64-linux-gnu/qt5/QtSql -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = ODM_alpha1.0.0
 DISTDIR = /home/oscar/Documents/QT/ODM/build-ODM_alpha-Desktop-Debug/.tmp/ODM_alpha1.0.0
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -lQt5Network -lQt5Xml -lQt5Core -lpthread 
+LIBS          = $(SUBLIBS) -lQt5Network -lQt5Xml -lQt5Sql -lQt5Core -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -53,7 +53,8 @@ SOURCES       = ../ODM_alpha/main.cpp \
 		../ODM_alpha/controller.cpp \
 		../ODM_alpha/dispenser.cpp \
 		../ODM_alpha/application.cpp \
-		../ODM_alpha/app_test.cpp moc_receiver.cpp \
+		../ODM_alpha/app_sv_bdd.cpp \
+		../ODM_alpha/app_map.cpp moc_receiver.cpp \
 		moc_controller.cpp \
 		moc_dispenser.cpp \
 		moc_application.cpp
@@ -62,7 +63,8 @@ OBJECTS       = main.o \
 		controller.o \
 		dispenser.o \
 		application.o \
-		app_test.o \
+		app_sv_bdd.o \
+		app_map.o \
 		moc_receiver.o \
 		moc_controller.o \
 		moc_dispenser.o \
@@ -132,18 +134,18 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../ODM_alpha/ODM_alpha.pro ../ODM_alpha/data_id.h \
-		../ODM_alpha/receiver.h \
+		../ODM_alpha/ODM_alpha.pro ../ODM_alpha/receiver.h \
 		../ODM_alpha/controller.h \
 		../ODM_alpha/dispenser.h \
 		../ODM_alpha/application.h \
-		../ODM_alpha/app_test.h \
+		../ODM_alpha/app_sv_bdd.h \
 		../ODM_alpha/app_map.h ../ODM_alpha/main.cpp \
 		../ODM_alpha/receiver.cpp \
 		../ODM_alpha/controller.cpp \
 		../ODM_alpha/dispenser.cpp \
 		../ODM_alpha/application.cpp \
-		../ODM_alpha/app_test.cpp
+		../ODM_alpha/app_sv_bdd.cpp \
+		../ODM_alpha/app_map.cpp
 QMAKE_TARGET  = ODM_alpha
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = ODM_alpha
@@ -242,6 +244,7 @@ Makefile: ../ODM_alpha/ODM_alpha.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux
 		../ODM_alpha/ODM_alpha.pro \
 		/usr/lib/x86_64-linux-gnu/libQt5Network.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Xml.prl \
+		/usr/lib/x86_64-linux-gnu/libQt5Sql.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Core.prl
 	$(QMAKE) -spec linux-g++-64 CONFIG+=debug -o Makefile ../ODM_alpha/ODM_alpha.pro
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf:
@@ -312,6 +315,7 @@ Makefile: ../ODM_alpha/ODM_alpha.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux
 ../ODM_alpha/ODM_alpha.pro:
 /usr/lib/x86_64-linux-gnu/libQt5Network.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Xml.prl:
+/usr/lib/x86_64-linux-gnu/libQt5Sql.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -spec linux-g++-64 CONFIG+=debug -o Makefile ../ODM_alpha/ODM_alpha.pro
@@ -327,8 +331,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../ODM_alpha/data_id.h ../ODM_alpha/receiver.h ../ODM_alpha/controller.h ../ODM_alpha/dispenser.h ../ODM_alpha/application.h ../ODM_alpha/app_test.h ../ODM_alpha/app_map.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../ODM_alpha/main.cpp ../ODM_alpha/receiver.cpp ../ODM_alpha/controller.cpp ../ODM_alpha/dispenser.cpp ../ODM_alpha/application.cpp ../ODM_alpha/app_test.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../ODM_alpha/receiver.h ../ODM_alpha/controller.h ../ODM_alpha/dispenser.h ../ODM_alpha/application.h ../ODM_alpha/app_sv_bdd.h ../ODM_alpha/app_map.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../ODM_alpha/main.cpp ../ODM_alpha/receiver.cpp ../ODM_alpha/controller.cpp ../ODM_alpha/dispenser.cpp ../ODM_alpha/application.cpp ../ODM_alpha/app_sv_bdd.cpp ../ODM_alpha/app_map.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -354,24 +358,22 @@ compiler_rcc_clean:
 compiler_moc_header_make_all: moc_receiver.cpp moc_controller.cpp moc_dispenser.cpp moc_application.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_receiver.cpp moc_controller.cpp moc_dispenser.cpp moc_application.cpp
-moc_receiver.cpp: ../ODM_alpha/data_id.h \
-		../ODM_alpha/receiver.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/receiver.h -o moc_receiver.cpp
+moc_receiver.cpp: ../ODM_alpha/receiver.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/receiver.h -o moc_receiver.cpp
 
-moc_controller.cpp: ../ODM_alpha/application.h \
-		../ODM_alpha/data_id.h \
-		../ODM_alpha/receiver.h \
+moc_controller.cpp: ../ODM_alpha/receiver.h \
 		../ODM_alpha/dispenser.h \
-		../ODM_alpha/app_test.h \
+		../ODM_alpha/application.h \
+		../ODM_alpha/app_sv_bdd.h \
+		../ODM_alpha/app_map.h \
 		../ODM_alpha/controller.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/controller.h -o moc_controller.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/controller.h -o moc_controller.cpp
 
-moc_dispenser.cpp: ../ODM_alpha/data_id.h \
-		../ODM_alpha/dispenser.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/dispenser.h -o moc_dispenser.cpp
+moc_dispenser.cpp: ../ODM_alpha/dispenser.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/dispenser.h -o moc_dispenser.cpp
 
 moc_application.cpp: ../ODM_alpha/application.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/application.h -o moc_application.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/application.h -o moc_application.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -386,35 +388,37 @@ compiler_clean: compiler_moc_header_clean
 ####### Compile
 
 main.o: ../ODM_alpha/main.cpp ../ODM_alpha/controller.h \
-		../ODM_alpha/application.h \
-		../ODM_alpha/data_id.h \
 		../ODM_alpha/receiver.h \
 		../ODM_alpha/dispenser.h \
-		../ODM_alpha/app_test.h
+		../ODM_alpha/application.h \
+		../ODM_alpha/app_sv_bdd.h \
+		../ODM_alpha/app_map.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../ODM_alpha/main.cpp
 
-receiver.o: ../ODM_alpha/receiver.cpp ../ODM_alpha/receiver.h \
-		../ODM_alpha/data_id.h
+receiver.o: ../ODM_alpha/receiver.cpp ../ODM_alpha/receiver.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o receiver.o ../ODM_alpha/receiver.cpp
 
 controller.o: ../ODM_alpha/controller.cpp ../ODM_alpha/controller.h \
-		../ODM_alpha/application.h \
-		../ODM_alpha/data_id.h \
 		../ODM_alpha/receiver.h \
 		../ODM_alpha/dispenser.h \
-		../ODM_alpha/app_test.h
+		../ODM_alpha/application.h \
+		../ODM_alpha/app_sv_bdd.h \
+		../ODM_alpha/app_map.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o controller.o ../ODM_alpha/controller.cpp
 
-dispenser.o: ../ODM_alpha/dispenser.cpp ../ODM_alpha/dispenser.h \
-		../ODM_alpha/data_id.h
+dispenser.o: ../ODM_alpha/dispenser.cpp ../ODM_alpha/dispenser.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dispenser.o ../ODM_alpha/dispenser.cpp
 
 application.o: ../ODM_alpha/application.cpp ../ODM_alpha/application.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o application.o ../ODM_alpha/application.cpp
 
-app_test.o: ../ODM_alpha/app_test.cpp ../ODM_alpha/app_test.h \
+app_sv_bdd.o: ../ODM_alpha/app_sv_bdd.cpp ../ODM_alpha/app_sv_bdd.h \
 		../ODM_alpha/application.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o app_test.o ../ODM_alpha/app_test.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o app_sv_bdd.o ../ODM_alpha/app_sv_bdd.cpp
+
+app_map.o: ../ODM_alpha/app_map.cpp ../ODM_alpha/app_map.h \
+		../ODM_alpha/application.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o app_map.o ../ODM_alpha/app_map.cpp
 
 moc_receiver.o: moc_receiver.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_receiver.o moc_receiver.cpp

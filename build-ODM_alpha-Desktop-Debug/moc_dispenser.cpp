@@ -20,8 +20,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_odm__Dispenser_t {
-    QByteArrayData data[9];
-    char stringdata0[120];
+    QByteArrayData data[11];
+    char stringdata0[130];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -35,15 +35,18 @@ QT_MOC_LITERAL(1, 15, 11), // "requestData"
 QT_MOC_LITERAL(2, 27, 0), // ""
 QT_MOC_LITERAL(3, 28, 13), // "dispenseState"
 QT_MOC_LITERAL(4, 42, 21), // "QVector<QVariantMap>*"
-QT_MOC_LITERAL(5, 64, 15), // "QReadWriteLock*"
-QT_MOC_LITERAL(6, 80, 11), // "processData"
-QT_MOC_LITERAL(7, 92, 16), // "QVector<data_id>"
-QT_MOC_LITERAL(8, 109, 10) // "shareState"
+QT_MOC_LITERAL(5, 64, 2), // "st"
+QT_MOC_LITERAL(6, 67, 15), // "QReadWriteLock*"
+QT_MOC_LITERAL(7, 83, 2), // "lo"
+QT_MOC_LITERAL(8, 86, 11), // "processData"
+QT_MOC_LITERAL(9, 98, 20), // "QVector<QJsonObject>"
+QT_MOC_LITERAL(10, 119, 10) // "shareState"
 
     },
     "odm::Dispenser\0requestData\0\0dispenseState\0"
-    "QVector<QVariantMap>*\0QReadWriteLock*\0"
-    "processData\0QVector<data_id>\0shareState"
+    "QVector<QVariantMap>*\0st\0QReadWriteLock*\0"
+    "lo\0processData\0QVector<QJsonObject>\0"
+    "shareState"
 };
 #undef QT_MOC_LITERAL
 
@@ -65,15 +68,15 @@ static const uint qt_meta_data_odm__Dispenser[] = {
        3,    2,   35,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       6,    1,   40,    2, 0x0a /* Public */,
-       8,    0,   43,    2, 0x0a /* Public */,
+       8,    1,   40,    2, 0x0a /* Public */,
+      10,    0,   43,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 4, 0x80000000 | 5,    2,    2,
+    QMetaType::Void, 0x80000000 | 4, 0x80000000 | 6,    5,    7,
 
  // slots: parameters
-    QMetaType::Void, 0x80000000 | 7,    2,
+    QMetaType::Void, 0x80000000 | 9,    2,
     QMetaType::Void,
 
        0        // eod
@@ -87,9 +90,20 @@ void odm::Dispenser::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         switch (_id) {
         case 0: _t->requestData(); break;
         case 1: _t->dispenseState((*reinterpret_cast< QVector<QVariantMap>*(*)>(_a[1])),(*reinterpret_cast< QReadWriteLock*(*)>(_a[2]))); break;
-        case 2: _t->processData((*reinterpret_cast< QVector<data_id>(*)>(_a[1]))); break;
+        case 2: _t->processData((*reinterpret_cast< QVector<QJsonObject>(*)>(_a[1]))); break;
         case 3: _t->shareState(); break;
         default: ;
+        }
+    } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        switch (_id) {
+        default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+        case 2:
+            switch (*reinterpret_cast<int*>(_a[1])) {
+            default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+            case 0:
+                *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< QVector<QJsonObject> >(); break;
+            }
+            break;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
@@ -139,7 +153,7 @@ int odm::Dispenser::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         _id -= 4;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         if (_id < 4)
-            *reinterpret_cast<int*>(_a[0]) = -1;
+            qt_static_metacall(this, _c, _id, _a);
         _id -= 4;
     }
     return _id;
