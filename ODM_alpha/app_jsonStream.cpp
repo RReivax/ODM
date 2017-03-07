@@ -4,7 +4,6 @@
 app_jsonStream::app_jsonStream()
 {
 
-
 }
 
 void app_jsonStream::start()
@@ -25,9 +24,6 @@ void app_jsonStream::loop()
     qDebug() << "App loop";
 
     while(is_running){
-        //socket->write(QString("{\"latitude\":250}").toLatin1().data());
-        //socket->waitForBytesWritten(1000);
-
         if(updateState()){
             if(state.length() > 0){
                 for(int i = 0;i<state.length();i++){
