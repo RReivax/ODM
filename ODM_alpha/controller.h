@@ -9,6 +9,7 @@
 
 #include "receiver.h"
 #include "dispenser.h"
+#include "cli.h"
 
 #include "application.h"
 #include "app_sv_bdd.h"
@@ -28,9 +29,11 @@ namespace odm{
         void queued_prepareData();
     private:
         QThread rThread;
-        QThread tThread;
+        QThread dThread;
+        QThread cliThread;
         Receiver receiver;
         Dispenser dispenser;
+        CLI cli;
 
         //Applications
         app_sv_bdd appsvbdd;

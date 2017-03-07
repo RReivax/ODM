@@ -4,8 +4,8 @@ using namespace odm;
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    Controller test;
+    Controller controller;
 
-    test.launch();
+    controller.launch();
     return a.exec();
 }

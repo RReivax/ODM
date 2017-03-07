@@ -7,14 +7,15 @@
 odm::Controller::Controller(QObject *parent) : QThread(parent) {
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
     receiver.moveToThread(&rThread);
-    dispenser.moveToThread(&tThread);
+    dispenser.moveToThread(&dThread);
     appsvbdd.moveToThread(&appsvbddThread);
 
     qRegisterMetaType<QVector<QJsonObject>>("QVector<QJsonObject>");
-    QObject::connect(&tThread, SIGNAL(started()), &dispenser, SIGNAL(requestData()));
+    QObject::connect(&dThread, SIGNAL(started()), &dispenser, SIGNAL(requestData()));
     QObject::connect(&rThread, SIGNAL(started()), &receiver, SLOT(startServer()));
+    QObject::connect(&cliThread, SIGNAL(started()), &cli, SLOT(startReading()));
 
-    QObject::connect(&tThread, SIGNAL(started()), &dispenser, SLOT(shareState()));
+    QObject::connect(&dThread, SIGNAL(started()), &dispenser, SLOT(shareState()));
 
 
     QObject::connect(&dispenser, SIGNAL(requestData()), this, SIGNAL(queued_prepareData()));
@@ -46,10 +47,11 @@ void odm::Controller::launch(){
     this->moveToThread(this);
     this->start();
 
+    cliThread.start();
     rThread.start();
-    tThread.start();
+    dThread.start();
 
-    //apptestThread.start();
+    //apptesdThread.start();
     appsvbddThread.start();
 
     //apptest.test();
