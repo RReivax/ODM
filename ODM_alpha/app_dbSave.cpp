@@ -70,23 +70,38 @@ bool app_dbSave::get_conf(){
             grandchild = node.firstChild();
             while(!grandchild.isNull()){
                     elem2 = grandchild.toElement();
-                    qDebug() << MARKER_DEBUG << elem2.tagName();
-                    qDebug() << MARKER_DEBUG << elem2.text();
+                    if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << elem2.tagName();
                     grandchild = grandchild.nextSibling();
                     if(elem2.tagName()=="DB_HOSTNAME")
                        DB_HOSTNAME=elem2.text();
+                    if(elem2.tagName()=="DB_USERNAME")
+                       DB_USERNAME=elem2.text();
+                    if(elem2.tagName()=="DB_PASSWORD")
+                       DB_PASSWORD=elem2.text();
+                    if(elem2.tagName()=="DB_NAME")
+                       DB_NAME=elem2.text();
             }
         }
         else if(elem.tagName()=="table_name"){
             grandchild = node.firstChild();
             while(!grandchild.isNull()){
                     elem2 = grandchild.toElement();
-                    qDebug() << MARKER_DEBUG << elem2.tagName();
+                    if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << elem2.tagName();
                     grandchild = grandchild.nextSibling();
+                    if(elem2.tagName()=="TABLE_LAT")
+                       TABLE_LAT=elem2.text();
+                    if(elem2.tagName()=="TABLE_ALT")
+                       TABLE_ALT=elem2.text();
+                    if(elem2.tagName()=="TABLE_DTE")
+                       TABLE_DTE=elem2.text();
+                    if(elem2.tagName()=="TABLE_ID")
+                       TABLE_ID=elem2.text();
+                    if(elem2.tagName()=="TABLE_LONG")
+                       TABLE_LONG=elem2.text();
             }
         }
         else
-            qDebug() << MARKER_DEBUG << elem.tagName();
+            if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << elem.tagName();
         node = node.nextSibling();
     }
     return true;

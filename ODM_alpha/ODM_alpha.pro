@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     controller.cpp \
     dispenser.cpp \
     application.cpp \
-    app_dbSave.cpp
+    app_dbSave.cpp \
+    app_jsonStream.cpp
     app_jsonStream.cpp
 
 
@@ -37,5 +38,6 @@ HEADERS += \
     controller.h \
     dispenser.h \
     application.h \
-    app_dbSave.h
+    app_dbSave.h \
+    app_jsonStream.h
     app_jsonStream.h

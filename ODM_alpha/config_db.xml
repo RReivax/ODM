@@ -3,7 +3,7 @@
     <connection_param>
         <DB_HOSTNAME>localhost</DB_HOSTNAME>
         <DB_USERNAME>root</DB_USERNAME>
-        <DB_PASSWORD>root</DB_PASSWORD>
+        <DB_PASSWORD></DB_PASSWORD>
         <DB_NAME>odm_db</DB_NAME>
     </connection_param>    
     <table_name>

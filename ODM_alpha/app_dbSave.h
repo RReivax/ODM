@@ -44,7 +44,7 @@ class app_dbSave : public odm::Application
         int TIME_LAPS = 3;
 
 
-        bool DEBUG_ENABLE = true; // True to enable verbose debug mode
+        bool DEBUG_ENABLE = false; // True to enable verbose debug mode
         bool is_running; /**< Boolean controlling the main loop, of the 'void loop()' (below)*/
 
         /** @fn void app_dbSave::loop()
