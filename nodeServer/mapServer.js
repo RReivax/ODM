@@ -5,13 +5,14 @@ var path = require('path');
 var variable ="" ;
 var app = express();
 
-console.log(variable);
 
 var applicationServer = net.createServer(function(socket){
 	console.log('server connected');
 	socket.on('data', function(data) {
+		console.log(String.fromCharCode(data));
 		data= JSON.parse(data);
-		console.log('server data:\n'+data.id + ' ' +data.latitude+' '+data.longitude);
+		console.log(data);
+		console.log('server data:\n'+data.name + ' ' +data.Latitude+' '+data.Longitude);
         variable = data;
     });
 });

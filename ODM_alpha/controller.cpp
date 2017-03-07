@@ -10,7 +10,7 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
     dispenser.moveToThread(&tThread);
 
     //appsvbdd.moveToThread(&appsvbddThread);
-    appMap.moveToThread(&appMapThread);
+    appjsonStream.moveToThread(&appjsonStreamThread);
 
     qRegisterMetaType<QVector<QJsonObject>>("QVector<QJsonObject>");
     QObject::connect(&tThread, SIGNAL(started()), &dispenser, SIGNAL(requestData()));
@@ -52,7 +52,7 @@ void odm::Controller::launch(){
     tThread.start();
 
    // appsvbddThread.start();
-    appMapThread.start();
+    appjsonStreamThread.start();
     //appsvbdd.start();
-    appMap.start();
+    appjsonStream.start();
 }

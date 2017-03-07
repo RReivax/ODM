@@ -36,12 +36,12 @@ function initmap() {
     var socket = io.connect('http://'+location.hostname+':8080');
 
 		socket.on('update', function(message){
-				console.log(message.id);
-			if(drones[message.id] === undefined){
-					drones[message.id]= L.marker([message.latitude,message.longitude],{icon:droneIcon}).addTo(map);
+				console.log(message.name);
+			if(drones[message.name] === undefined){
+					drones[message.name]= L.marker([message.Latitude,message.Longitude],{icon:droneIcon}).addTo(map);
 			}
-			else if(message.id != null && message.latitude !=null && message.longitude !=null){
-				drones[message.id].setLatLng(new L.LatLng(message.latitude,message.longitude));
+			else if(message.name != null && message.Latitude !=null && message.Longitude !=null){
+				drones[message.name].setLatLng(new L.LatLng(message.Latitude,message.Longitude));
 			}
 			else console.log("Message not valid");
 		});

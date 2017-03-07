@@ -18,7 +18,7 @@ SOURCES += main.cpp \
     dispenser.cpp \
     application.cpp \
     app_sv_bdd.cpp \
-    app_map.cpp
+    app_jsonStream.cpp
 
 
 # The following define makes your compiler emit warnings if you use
@@ -38,4 +38,4 @@ HEADERS += \
     dispenser.h \
     application.h \
     app_sv_bdd.h \
-    app_map.h
+    app_jsonStream.h

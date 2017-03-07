@@ -54,7 +54,7 @@ SOURCES       = ../ODM_alpha/main.cpp \
 		../ODM_alpha/dispenser.cpp \
 		../ODM_alpha/application.cpp \
 		../ODM_alpha/app_sv_bdd.cpp \
-		../ODM_alpha/app_map.cpp moc_receiver.cpp \
+		../ODM_alpha/app_jsonStream.cpp moc_receiver.cpp \
 		moc_controller.cpp \
 		moc_dispenser.cpp \
 		moc_application.cpp
@@ -64,7 +64,7 @@ OBJECTS       = main.o \
 		dispenser.o \
 		application.o \
 		app_sv_bdd.o \
-		app_map.o \
+		app_jsonStream.o \
 		moc_receiver.o \
 		moc_controller.o \
 		moc_dispenser.o \
@@ -139,13 +139,13 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../ODM_alpha/dispenser.h \
 		../ODM_alpha/application.h \
 		../ODM_alpha/app_sv_bdd.h \
-		../ODM_alpha/app_map.h ../ODM_alpha/main.cpp \
+		../ODM_alpha/app_jsonStream.h ../ODM_alpha/main.cpp \
 		../ODM_alpha/receiver.cpp \
 		../ODM_alpha/controller.cpp \
 		../ODM_alpha/dispenser.cpp \
 		../ODM_alpha/application.cpp \
 		../ODM_alpha/app_sv_bdd.cpp \
-		../ODM_alpha/app_map.cpp
+		../ODM_alpha/app_jsonStream.cpp
 QMAKE_TARGET  = ODM_alpha
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = ODM_alpha
@@ -331,8 +331,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../ODM_alpha/receiver.h ../ODM_alpha/controller.h ../ODM_alpha/dispenser.h ../ODM_alpha/application.h ../ODM_alpha/app_sv_bdd.h ../ODM_alpha/app_map.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../ODM_alpha/main.cpp ../ODM_alpha/receiver.cpp ../ODM_alpha/controller.cpp ../ODM_alpha/dispenser.cpp ../ODM_alpha/application.cpp ../ODM_alpha/app_sv_bdd.cpp ../ODM_alpha/app_map.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../ODM_alpha/receiver.h ../ODM_alpha/controller.h ../ODM_alpha/dispenser.h ../ODM_alpha/application.h ../ODM_alpha/app_sv_bdd.h ../ODM_alpha/app_jsonStream.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../ODM_alpha/main.cpp ../ODM_alpha/receiver.cpp ../ODM_alpha/controller.cpp ../ODM_alpha/dispenser.cpp ../ODM_alpha/application.cpp ../ODM_alpha/app_sv_bdd.cpp ../ODM_alpha/app_jsonStream.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -365,7 +365,7 @@ moc_controller.cpp: ../ODM_alpha/receiver.h \
 		../ODM_alpha/dispenser.h \
 		../ODM_alpha/application.h \
 		../ODM_alpha/app_sv_bdd.h \
-		../ODM_alpha/app_map.h \
+		../ODM_alpha/app_jsonStream.h \
 		../ODM_alpha/controller.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/controller.h -o moc_controller.cpp
 
@@ -392,7 +392,7 @@ main.o: ../ODM_alpha/main.cpp ../ODM_alpha/controller.h \
 		../ODM_alpha/dispenser.h \
 		../ODM_alpha/application.h \
 		../ODM_alpha/app_sv_bdd.h \
-		../ODM_alpha/app_map.h
+		../ODM_alpha/app_jsonStream.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../ODM_alpha/main.cpp
 
 receiver.o: ../ODM_alpha/receiver.cpp ../ODM_alpha/receiver.h
@@ -403,7 +403,7 @@ controller.o: ../ODM_alpha/controller.cpp ../ODM_alpha/controller.h \
 		../ODM_alpha/dispenser.h \
 		../ODM_alpha/application.h \
 		../ODM_alpha/app_sv_bdd.h \
-		../ODM_alpha/app_map.h
+		../ODM_alpha/app_jsonStream.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o controller.o ../ODM_alpha/controller.cpp
 
 dispenser.o: ../ODM_alpha/dispenser.cpp ../ODM_alpha/dispenser.h
@@ -416,9 +416,9 @@ app_sv_bdd.o: ../ODM_alpha/app_sv_bdd.cpp ../ODM_alpha/app_sv_bdd.h \
 		../ODM_alpha/application.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o app_sv_bdd.o ../ODM_alpha/app_sv_bdd.cpp
 
-app_map.o: ../ODM_alpha/app_map.cpp ../ODM_alpha/app_map.h \
+app_jsonStream.o: ../ODM_alpha/app_jsonStream.cpp ../ODM_alpha/app_jsonStream.h \
 		../ODM_alpha/application.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o app_map.o ../ODM_alpha/app_map.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o app_jsonStream.o ../ODM_alpha/app_jsonStream.cpp
 
 moc_receiver.o: moc_receiver.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_receiver.o moc_receiver.cpp

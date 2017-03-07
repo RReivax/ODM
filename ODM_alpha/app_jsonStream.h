@@ -2,12 +2,14 @@
 #define APP_MAP_H
 
 #include <QTcpSocket>
+#include <QJsonObject>
+ #include <QJsonDocument>
 #include "application.h"
 
-class app_map : public odm::Application
+class app_jsonStream : public odm::Application
 {
     public:
-        app_map();
+        app_jsonStream();
 
         void start();
 

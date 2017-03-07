@@ -12,7 +12,7 @@
 
 #include "application.h"
 #include "app_sv_bdd.h"
-#include "app_map.h"
+#include "app_jsonStream.h"
 
 
 namespace odm{
@@ -35,8 +35,8 @@ namespace odm{
         //Applications
        // app_sv_bdd appsvbdd;
         //QThread appsvbddThread;
-        app_map appMap;
-        QThread appMapThread;
+        app_jsonStream appjsonStream;
+        QThread appjsonStreamThread;
     };
 }
 
