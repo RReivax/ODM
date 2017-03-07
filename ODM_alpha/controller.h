@@ -12,7 +12,7 @@
 
 #include "application.h"
 #include "app_dbSave.h"
-#include "app_map.h"
+#include "app_jsonStream.h"
 
 
 namespace odm{
@@ -33,8 +33,10 @@ namespace odm{
         Dispenser dispenser;
 
         //Applications
-        app_sv_bdd appsvbdd;
-        QThread appsvbddThread;
+       // app_sv_bdd appsvbdd;
+        //QThread appsvbddThread;
+        app_jsonStream appjsonStream;
+        QThread appjsonStreamThread;
     };
 }
 

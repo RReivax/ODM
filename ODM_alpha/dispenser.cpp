@@ -70,8 +70,10 @@ void odm::Dispenser::processData(QVector<QJsonObject> dataset){
             tmp["date"] = tmp["date"].toDateTime();
             //setting the most recent value for id as real time
             for(i=0;i<state.size();i++){
-                if(tmp["name"] == state[i]["name"] && tmp["date"] > state[i]["date"]){
-                    state[i] = tmp;
+                if(tmp["name"] == state[i]["name"]){
+                    if(tmp["date"] > state[i]["date"]){
+                        state[i] = tmp;
+                    }
                     idExists = true;
                 }
             }
