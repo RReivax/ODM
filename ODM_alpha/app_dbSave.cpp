@@ -1,26 +1,19 @@
-#include "app_sv_bdd.h"
-extern const QString TABLE_LAT = "latitude";
-extern const QString TABLE_ALT = "altitude";
-extern const QString TABLE_DTE = "date";
-extern const QString TABLE_ID = "id";
-extern const QString TABLE_LONG = "longitude";
-extern const QString MARKER_DEBUG = "****** APP BDD debug : ";
+#include "app_dbSave.h"
 
-
-extern const bool DEBUG_ENABLE = true; // True to enable verbose debug mode
-
-
-
-app_sv_bdd::app_sv_bdd()
+app_bdSave::app_bdSave()
 {
 
 }
 
-void app_sv_bdd::start(){
+void app_bdSave::start(){
     QThread::sleep(1);
-    if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Start of app_sv_bdd on:";
+    if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Start of app_dbSave on:";
     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << Q_FUNC_INFO << QThread::currentThreadId();
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+    if(get_conf())
+        if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Config file loaded";
+    else if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "No config file loaded, default value are used";
+
     db.setHostName(DB_HOSTNAME);
     db.setUserName(DB_USERNAME);
     db.setPassword(DB_PASSWORD);
@@ -41,7 +34,27 @@ void app_sv_bdd::start(){
     db.close();
 }
 
-bool app_sv_bdd::init(){
+bool app_bdSave::get_conf(){
+    QFile config("C:/Users/Arnaud/Documents/ECE/ING4/PPE/ODM_alpha/config_db.xml");
+    if(!config.open(QIODevice::ReadOnly)){
+        if (DEBUG_ENABLE)
+            qDebug() << Q_FUNC_INFO << config.error();
+        return false;
+    }
+    else {
+        if(!dom.setContent(&config)){
+            if (DEBUG_ENABLE)
+                qDebug() << Q_FUNC_INFO << "File error 2";
+            config.close();
+            return false;
+        }
+    }
+    config.close();
+
+
+}
+
+bool app_bdSave::init(){
     QSqlQuery query;
     bool return_b = false;
     if(query.exec("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'odm_db' AND TABLE_NAME = 'main';"))
@@ -65,7 +78,7 @@ bool app_sv_bdd::init(){
     return return_b;
 }
 
-void app_sv_bdd::loop(){
+void app_bdSave::loop(){
     QSqlQuery query;
     QString id_drone, longitude, latitude, altitude, date;
     while(is_running){
