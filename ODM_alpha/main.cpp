@@ -6,6 +6,6 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     Controller controller;
 
-    controller.launch();
+    controller.launchAll();
     return a.exec();
 }

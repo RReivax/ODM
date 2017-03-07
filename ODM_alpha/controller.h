@@ -23,6 +23,7 @@ namespace odm{
     public:
         explicit Controller(QObject *parent = 0);
         void launch();
+        void launchAll();
         virtual void run();
     signals:
         void queued_receiveData();

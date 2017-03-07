@@ -40,10 +40,10 @@ void odm::Controller::run(){
 }
 
 /**
- * Starts the Controller then the Receiver and Dispenser threads.
- * @brief odm::Controller::launch
+ * Starts the Controller then the CLI, Receiver and Dispenser threads.
+ * @brief odm::Controller::launchAll
  */
-void odm::Controller::launch(){
+void odm::Controller::launchAll(){
     this->moveToThread(this);
     this->start();
 
@@ -57,3 +57,15 @@ void odm::Controller::launch(){
     //apptest.test();
     appsvbdd.start();
 }
+
+/**
+ * Starts Controller and CLI
+ * @brief odm::Controller::launch
+ */
+void odm::Controller::launch(){
+    this->moveToThread(this);
+    this->start();
+
+    cliThread.start();
+}
+
