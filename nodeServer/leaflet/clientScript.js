@@ -4,40 +4,46 @@ var plotlist;
 var plotlayers=[];
 var marker;
 var posMarker;
-function moveMarker(){
-
-	posMarker.lat = posMarker.lat - (Math.random()/100000);
-	posMarker.lng = posMarker.lng - (Math.random()/100000);
-	marker.setLatLng(posMarker);
-}
+var droneIcon;
+var drones= [];
 
 function initmap() {
     // set up the map
+	
     map = new L.Map('map');
-posMarker = new L.LatLng(48.851658, 2.287161);
-console.log(posMarker);
+	posMarker = new L.LatLng(48.851658, 2.287161);
+	droneIcon = L.icon({
+			//Icon made by Freepik from www.flaticon.com 
+		iconUrl: 'images/drone-icon.png',
+		shadowUrl : 'images/drone-icon.png',
+		iconSize : [32,32],
+		shadowSize : [32,32],
+		iconAnchor : [16,16],
+		shadowAnchor : [16,16],
+		popupAnchor: [-3,10]
+	});
+
     // create the tile layer with correct attribution
     var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
     var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 18, attribution: osmAttrib});
 
-    // start the map in South-East England
     map.setView(posMarker,9);
 	map.setZoom(18);
-	marker = L.marker([48.851658,2.28716]).addTo(map);
+	//marker = L.marker([48.851658,2.28716],{icon:droneIcon}).addTo(map);
     map.addLayer(osm);
-	console.log('yolo');
-	setInterval(moveMarker, 100);
+
+    var socket = io.connect('http://'+location.hostname+':8080');
+
+		socket.on('update', function(message){
+				console.log(message.name);
+			if(drones[message.name] === undefined){
+					drones[message.name]= L.marker([message.Latitude,message.Longitude],{icon:droneIcon}).addTo(map);
+			}
+			else if(message.name != null && message.Latitude !=null && message.Longitude !=null){
+				drones[message.name].setLatLng(new L.LatLng(message.Latitude,message.Longitude));
+			}
+			else console.log("Message not valid");
+		});
 }
 
-            var socket = io.connect('http://'+location.hostname+':8080');
-            socket.on('message', function(message) {
-		message = JSON.parse(message);
-		console.log(message);
-		 marker = new google.maps.Marker({
-    			position: message,
-    			map: map,
-    			title: 'Hello World!'
-  		});
-
-            })

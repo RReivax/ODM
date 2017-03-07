@@ -18,6 +18,7 @@ SOURCES += main.cpp \
     dispenser.cpp \
     application.cpp \
     app_dbSave.cpp
+    app_jsonStream.cpp
 
 
 # The following define makes your compiler emit warnings if you use
@@ -36,5 +37,5 @@ HEADERS += \
     controller.h \
     dispenser.h \
     application.h \
-    app_map.h \
     app_dbSave.h
+    app_jsonStream.h

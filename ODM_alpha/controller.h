@@ -12,7 +12,7 @@
 
 #include "application.h"
 #include "app_dbSave.h"
-#include "app_map.h"
+#include "app_jsonStream.h"
 
 
 namespace odm{
@@ -35,6 +35,8 @@ namespace odm{
         //Applications
         app_dbSave appdbSave;
         QThread appdbSaveThread;
+        app_jsonStream appjsonStream;
+        QThread appjsonStreamThread;
     };
 }
 
