@@ -1,12 +1,12 @@
-#ifndef APP_bdSave_H
-#define APP_bdSave_H
+#ifndef app_dbSave_H
+#define app_dbSave_H
 
 #include "application.h"
 #include <QtSql>
 #include <QString>
 
 /**
- * @class app_bdSave
+ * @class app_dbSave
  * @brief Use to save real time data
  * 		into a specified data base
  *
@@ -14,12 +14,14 @@
  * on a DB using MySQL. The DB is configured with the information below
  */
 
-class app_bdSave : public odm::Application
+class app_dbSave : public odm::Application
 {
     public:
-        app_bdSave();
+        app_dbSave();
 
-        /** @fn void app_bdSave::start()
+        bool get_conf();
+
+        /** @fn void app_dbSave::start()
              *  @brief will try to connect to the DB with the given info, if succeed, will call init();.
              *  @return nothing.
              *
@@ -32,7 +34,7 @@ class app_bdSave : public odm::Application
         const QString MARKER_DEBUG = "****** APP DB debug : ";
         QString DB_HOSTNAME="localhost";
         QString DB_USERNAME="root";
-        QString DB_PASSWORD="root";
+        QString DB_PASSWORD="";
         QString DB_NAME="odm_db";
         QString TABLE_LAT = "latitude";
         QString TABLE_ALT = "altitude";
@@ -45,7 +47,7 @@ class app_bdSave : public odm::Application
         bool DEBUG_ENABLE = true; // True to enable verbose debug mode
         bool is_running; /**< Boolean controlling the main loop, of the 'void loop()' (below)*/
 
-        /** @fn void app_bdSave::loop()
+        /** @fn void app_dbSave::loop()
              *  @brief Each TIME_LAPS seconds, save in the DB the state table.
              *  @return nothing.
              *
@@ -54,7 +56,7 @@ class app_bdSave : public odm::Application
              */
         void loop();
 
-        /** @fn void app_bdSave::loop()
+        /** @fn void app_dbSave::loop()
              *  @brief heck if the table exist, if not, try to create it.
              *  @return true if the table is ready false else.
              *
@@ -64,4 +66,4 @@ class app_bdSave : public odm::Application
         bool init();
 };
 
-#endif // APP_bdSave_H
+#endif // app_dbSave_H

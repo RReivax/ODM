@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QVector>
 #include <QStack>
+#include <QtXml>
 
 namespace odm{
     /**

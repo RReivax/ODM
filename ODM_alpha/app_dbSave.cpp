@@ -1,18 +1,21 @@
 #include "app_dbSave.h"
 
-app_bdSave::app_bdSave()
+app_dbSave::app_dbSave()
 {
 
 }
 
-void app_bdSave::start(){
+void app_dbSave::start(){
     QThread::sleep(1);
     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Start of app_dbSave on:";
     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << Q_FUNC_INFO << QThread::currentThreadId();
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-    if(get_conf())
+    if(this->get_conf()){
         if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Config file loaded";
-    else if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "No config file loaded, default value are used";
+    }
+    else {
+        if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "No config file loaded, default value are used";
+    }
 
     db.setHostName(DB_HOSTNAME);
     db.setUserName(DB_USERNAME);
@@ -34,7 +37,16 @@ void app_bdSave::start(){
     db.close();
 }
 
-bool app_bdSave::get_conf(){
+bool app_dbSave::get_conf(){
+    QDomDocument dom;
+    QDomNode node;
+    QDomNode grandchild;
+    QDomElement root;
+    QDomElement elem;
+    QDomElement elem2;
+    QString n;
+    QChar t;
+
     QFile config("C:/Users/Arnaud/Documents/ECE/ING4/PPE/ODM_alpha/config_db.xml");
     if(!config.open(QIODevice::ReadOnly)){
         if (DEBUG_ENABLE)
@@ -50,11 +62,37 @@ bool app_bdSave::get_conf(){
         }
     }
     config.close();
-
-
+    root = dom.documentElement();
+    node = root.firstChild();
+    while(!node.isNull()){
+        elem = node.toElement();
+        if(elem.tagName()=="connection_param"){
+            grandchild = node.firstChild();
+            while(!grandchild.isNull()){
+                    elem2 = grandchild.toElement();
+                    qDebug() << MARKER_DEBUG << elem2.tagName();
+                    qDebug() << MARKER_DEBUG << elem2.text();
+                    grandchild = grandchild.nextSibling();
+                    if(elem2.tagName()=="DB_HOSTNAME")
+                       DB_HOSTNAME=elem2.text();
+            }
+        }
+        else if(elem.tagName()=="table_name"){
+            grandchild = node.firstChild();
+            while(!grandchild.isNull()){
+                    elem2 = grandchild.toElement();
+                    qDebug() << MARKER_DEBUG << elem2.tagName();
+                    grandchild = grandchild.nextSibling();
+            }
+        }
+        else
+            qDebug() << MARKER_DEBUG << elem.tagName();
+        node = node.nextSibling();
+    }
+    return true;
 }
 
-bool app_bdSave::init(){
+bool app_dbSave::init(){
     QSqlQuery query;
     bool return_b = false;
     if(query.exec("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'odm_db' AND TABLE_NAME = 'main';"))
@@ -78,7 +116,7 @@ bool app_bdSave::init(){
     return return_b;
 }
 
-void app_bdSave::loop(){
+void app_dbSave::loop(){
     QSqlQuery query;
     QString id_drone, longitude, latitude, altitude, date;
     while(is_running){
