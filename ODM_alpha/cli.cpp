@@ -1,23 +1,30 @@
 #include "cli.h"
 
-odm::CLI::CLI(QObject *parent) : QObject(parent){
+odm::CLI::CLI(QWidget *parent) : QWidget(parent){
+    resize(600,50);
+    setWindowTitle("ODM - Input command line");
 
+    layout = new QBoxLayout(QBoxLayout::LeftToRight);
+
+    inpLine = new QLineEdit();
+    inpLine->resize(500, 40);
+    layout->addWidget(inpLine);
+
+    btn = new QPushButton("Enter");
+    layout->addWidget(btn);
+
+    this->setLayout(layout);
 }
 
 void odm::CLI::startReading(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
-    QSocketNotifier *pNot = new QSocketNotifier(STDIN_FILENO, QSocketNotifier::Read, this);
-    connect(pNot, SIGNAL(activated(int)), this, SLOT(readCommand()));
-    pNot->setEnabled(true);
+    QObject::connect(inpLine, SIGNAL(returnPressed()), this, SLOT(readCommand()));
+    QObject::connect(btn, SIGNAL(clicked(bool)), this, SLOT(readCommand()));
+    show();
 }
 
 void odm::CLI::readCommand(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
-
-    QTextStream stream(stdin);
-    QString line;
-    while (stream.readLineInto(&line)) {
-        if(line == "shutdown")
-            qDebug() << "Shuting down...";
-    }
+    if(!inpLine->text().isEmpty())emit passCommand(inpLine->text());
+    inpLine->setText("");
 }

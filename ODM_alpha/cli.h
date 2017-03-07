@@ -1,21 +1,25 @@
 #ifndef CLI_H
 #define CLI_H
 
-#include <QObject>
 #include <QtCore>
+#include <QtWidgets>
 
 namespace odm{
-    class CLI : public QObject
+    class CLI : public QWidget
     {
         Q_OBJECT
     public:
-        explicit CLI(QObject *parent = 0);
+        explicit CLI(QWidget *parent = 0);
 
     signals:
-
+        void passCommand(QString cmd);
     public slots:
         void startReading();
         void readCommand();
+    private:
+        QBoxLayout *layout;
+        QLineEdit *inpLine;
+        QPushButton *btn;
     };
 }
 

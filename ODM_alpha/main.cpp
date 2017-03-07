@@ -3,9 +3,10 @@
 using namespace odm;
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    qDebug() << "Initialisation...";
+    QApplication a(argc, argv);
     Controller controller;
 
-    controller.launchAll();
+    controller.launch();
     return a.exec();
 }

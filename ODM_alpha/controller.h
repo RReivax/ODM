@@ -1,11 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include <QObject>
-#include <QThread>
-#include <QDebug>
-#include <QVector>
-#include <QStack>
+#include <QtCore>
 
 #include "receiver.h"
 #include "dispenser.h"
@@ -20,14 +16,23 @@ namespace odm{
     class Controller : public QThread
     {
         Q_OBJECT
+        Q_ENUMS(Keywords)
+
     public:
         explicit Controller(QObject *parent = 0);
         void launch();
         void launchAll();
         virtual void run();
+
+        enum Keywords{
+            EXIT, QUIT, HELP, SERVER, DBSAVE, JSONSTREAM, START, STOP, RESTART, SET
+        };
+
     signals:
         void queued_receiveData();
         void queued_prepareData();
+    public slots:
+        void processCommand(QString cmd);
     private:
         QThread rThread;
         QThread dThread;
