@@ -18,8 +18,10 @@ namespace odm {
             void noDataToTransfer();
 
             void dataReceived(QByteArray);
+            void readyToStop();
         public slots:
             void startServer();
+            void stopServer();
 
             void newClient();
             void disconnected();

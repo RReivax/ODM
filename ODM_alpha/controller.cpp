@@ -13,6 +13,8 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
     qRegisterMetaType<QVector<QJsonObject>>("QVector<QJsonObject>");
     QObject::connect(&dThread, SIGNAL(started()), &dispenser, SIGNAL(requestData()));
     QObject::connect(&rThread, SIGNAL(started()), &receiver, SLOT(startServer()));
+    QObject::connect(this, SIGNAL(stopServer()), &receiver, SLOT(stopServer()));
+    QObject::connect(&receiver, SIGNAL(readyToStop()), &rThread, SLOT(quit()));
 
     QObject::connect(&dThread, SIGNAL(started()), &dispenser, SLOT(shareState()));
 
@@ -73,44 +75,109 @@ void odm::Controller::launch(){
 }
 
 void odm::Controller::processCommand(QString cmd){
+    QTextStream out(stdout);
+
+    out << " > " << cmd << endl;
     QStringList l = cmd.split(" ", QString::SkipEmptyParts, Qt::CaseInsensitive);
 
     QMetaObject MetaObject = this->staticMetaObject;
     QMetaEnum MetaEnum = MetaObject.enumerator(MetaObject.indexOfEnumerator("Keywords"));
 
-    switch (MetaEnum.keysToValue(l[0].toUpper().toLatin1())){
-        case SERVER:
-            qDebug() << "SERVER CONFIG";
-            switch (MetaEnum.keysToValue(l[1].toUpper().toLatin1())){
-                case START:
-                    rThread.start();
-                    dThread.start();
-                break;
-                case STOP:
-                break;
-                case RESTART:
-                break;
-                default:
-                    qDebug() << l[0] << " is not a valid action. Type \"help\" for more information";
-            }
-        break;
+    if(l.size() >= 1){
+        switch (MetaEnum.keysToValue(l[0].toUpper().toLatin1())){
+            case SERVER:
+                if(l.size() >= 2){
+                    switch (MetaEnum.keysToValue(l[1].toUpper().toLatin1())){
+                        case START:
+                            if(!rThread.isRunning() && !dThread.isRunning()){
+                                rThread.start();
+                                dThread.start();
+                            }
+                            if(rThread.isRunning() ^ dThread.isRunning()){
+                                emit stopServer();
+                                dThread.terminate();
+                                while(rThread.isRunning() ^ dThread.isRunning());
+                                rThread.start();
+                                dThread.start();
+                            }
+                        break;
 
-        case DBSAVE:
-        break;
+                        case STOP:
+                            if(dThread.isRunning() ){
+                                emit stopServer();
+                                this->dThread.quit();
+                            }
+                            else{
+                                qDebug() << "Server is already down.";
+                            }
+                        break;
 
-        case JSONSTREAM:
-        break;
+                        case RESTART:
+                            if(rThread.isRunning() ^ dThread.isRunning()){
+                                qDebug() << "Waiting for server to shutdown...";
+                                emit stopServer();
+                                dThread.quit();
+                                while(rThread.isRunning() ^ dThread.isRunning());
+                                rThread.start();
+                                dThread.start();
+                            }
+                        break;
 
-        case HELP:
-        break;
+                        default:
+                            qDebug() << l[1] << " is not a valid action. Type \"help\" for more information";
+                    }
+                }
+                else{
+                    qDebug() << "Please specify an action (START, STOP, RESTART); e.g. SERVER START";
+                }
+            break;
 
-        case EXIT:
-        case QUIT:
-            qDebug() << "Shutting down...";
-        break;
+            case DBSAVE:
+                if(l.size() >= 2){
+                    switch (MetaEnum.keysToValue(l[1].toUpper().toLatin1())){
+                        case START:
+                            if(!appsvbddThread.isRunning()){
+                                appsvbddThread.start();
+                            }
+                            else{
+                                qDebug() << "DBSAVE is already running.";
+                            }
+                        break;
+                        case STOP:
+                            if(appsvbddThread.isRunning() ){
+                                this->appsvbddThread.quit();
+                            }
+                            else{
+                                qDebug() << "Server is already down.";
+                            }
+                        break;
+                    }
+                }
+                else{
+                    qDebug() << "Please specify an action (START, STOP, RESTART, SET <attribute> <value>); e.g. DBSAVE START";
+                }
+            break;
 
-        default:
-            qDebug() << l[0] << " is not a valid component. Type \"help\" for more information";
+            case JSONSTREAM:
+            break;
+
+            case HELP:
+                qDebug() << "Command syntax : <component> <action>\nIf <action> is SET, append <property> <value>\n\tComponents : SERVER, DBSAVE, JSONSTREAM\n\tActions : START, STOP, RESTART, SET";
+            break;
+
+            case EXIT:
+            case QUIT:
+                qDebug() << "Shutting down...";
+                this->appsvbddThread.quit();
+                //this->jsonstreamThread.quit()
+                this->rThread.quit();
+                this->dThread.quit();
+                this->quit();
+            break;
+
+            default:
+                qDebug() << l[0] << " is not a valid component. Type \"help\" for more information";
+        }
     }
 
 }

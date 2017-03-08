@@ -29,6 +29,8 @@ namespace odm{
         };
 
     signals:
+        void stopServer();
+
         void queued_receiveData();
         void queued_prepareData();
     public slots:
