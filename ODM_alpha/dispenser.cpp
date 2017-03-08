@@ -110,3 +110,17 @@ void odm::Dispenser::processData(QVector<QJsonObject> dataset){
 void odm::Dispenser::shareState(){
     emit dispenseState(&state, &lock);
 }
+
+void odm::Dispenser::removeState(QString name)
+{
+    qDebug()<<"Removing State: "<<name;
+    for(int i=0;i<state.size();i++)
+    {
+        if(state[i]["name"]==name)
+        {
+            qDebug()<<"Removed State: "<<state[i]["name"];
+            state.removeAt(i);
+            break;
+        }
+    }
+}

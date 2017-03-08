@@ -19,6 +19,7 @@ namespace odm {
             void noDataToTransfer();
 
             void dataReceived(QByteArray);
+            void stateToDelete(QString);
         public slots:
             void startServer();
 
@@ -26,14 +27,14 @@ namespace odm {
             void disconnected();
             void readSocket();
             void InitClient();
-
+            void RemoveStack();
             void prepareData();
             void stackData(QByteArray toStack);
         private:
             QTcpServer *tcpServer;
             QHash<QTcpSocket*, QByteArray*> buffers; //We need a buffer to store data until block has completely received
             QString statusLabel;
-
+            QStringList toDelete;
             QMap<QString,QJsonStack> flightData;
             int dc;
 

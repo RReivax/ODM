@@ -26,6 +26,8 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
 
     QObject::connect(&receiver, SIGNAL(transferData(QVector<QJsonObject>)), &dispenser, SLOT(processData(QVector<QJsonObject>)));
 
+    QObject::connect(&receiver,SIGNAL(stateToDelete(QString)),&dispenser,SLOT(removeState(QString)));
+
     //Application connection
     QObject::connect(&dispenser, &odm::Dispenser::dispenseState, &odm::Application::getState);
 }

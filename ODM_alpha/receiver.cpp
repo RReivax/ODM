@@ -117,6 +117,9 @@ void odm::Receiver::disconnected(){
     QByteArray *buffer = buffers.value(socket);
     socket->deleteLater();
     //Libère nom
+    toDelete.push_back(QJsonDocument::fromJson(*buffer).object().value("name").toString());
+    //flightData[QJsonDocument::fromJson(*buffer).object().value("name").toString()]
+    connect(&flightData[QJsonDocument::fromJson(*buffer).object().value("name").toString()],SIGNAL(StackEmpty()),this,SLOT(RemoveStack()));
     delete buffer;
 }
 
@@ -168,4 +171,16 @@ void odm::Receiver::stackData(QByteArray toStack){
             QMap<QString, QVariant> tmp = QJsonDocument::fromJson(toStack).object().toVariantMap();
     }
 }
-
+void odm::Receiver::RemoveStack()
+{
+    if(!toDelete.isEmpty())
+    {
+        foreach (QString name, toDelete) {
+            if(flightData[name].toQStack().isEmpty()){
+                qDebug()<<"Deleting : "<<name;
+                emit stateToDelete(name);
+                flightData.remove(name);
+            }
+        }
+    }
+}
