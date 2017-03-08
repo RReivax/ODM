@@ -7,6 +7,7 @@
 #include <QVector>
 #include <QStack>
 
+#include "qjsonstack.h"
 #include "receiver.h"
 #include "dispenser.h"
 

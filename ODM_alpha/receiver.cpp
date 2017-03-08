@@ -139,7 +139,6 @@ void odm::Receiver::readSocket(){
     qDebug() << "Count = " << dc;
     buffer->clear();
 }
-
 /**
  * Get top of stacks and transfer them if not empty.
  * @brief odm::Receiver::prepareData
@@ -149,10 +148,10 @@ void odm::Receiver::prepareData(){
 
     QVector<QJsonObject> dataset;
 
-    for(QMap<QString, QStack<QJsonObject>>::iterator i = flightData.begin(); i != flightData.end(); i++){
-        if(!i.value().isEmpty())dataset.push_back(i.value().pop());
+    for(QMap<QString, QJsonStack>::iterator i = flightData.begin(); i != flightData.end(); i++){
+        if(!i.value().isEmptyEmitSignal())
+            dataset.push_back(i.value().pop());
     }
-
     if(dataset.isEmpty()){
         //qDebug() << "No data to transfer";
         emit noDataToTransfer();

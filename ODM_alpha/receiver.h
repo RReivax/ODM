@@ -3,6 +3,7 @@
 
 #include <QtCore>
 #include <QtNetwork>
+#include "qjsonstack.h"
 
 
 namespace odm {
@@ -33,7 +34,7 @@ namespace odm {
             QHash<QTcpSocket*, QByteArray*> buffers; //We need a buffer to store data until block has completely received
             QString statusLabel;
 
-            QMap<QString,QStack<QJsonObject>> flightData;
+            QMap<QString,QJsonStack> flightData;
             int dc;
 
     };
