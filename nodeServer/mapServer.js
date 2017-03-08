@@ -2,21 +2,24 @@ var http = require('http');
 var net = require('net');
 var express = require('express');
 var path = require('path');
-var variable = "";
-var numberConnected = 0; 
-
+var variable ="" ;
 var app = express();
+
 
 var applicationServer = net.createServer(function(socket){
 	console.log('server connected');
 	socket.on('data', function(data) {
-		console.log(data.toString('utf8'));
-        variable = data.toString('utf8');
+		console.log(String.fromCharCode(data));
+		data= JSON.parse(data);
+		console.log(data);
+		console.log('server data:\n'+data.name + ' ' +data.Latitude+' '+data.Longitude);
+        variable = data;
     });
 });
 
 app.use(express.static(__dirname + '/style'));
 app.use(express.static(__dirname+'/leaflet'));
+
 /* Displays index.html */
 app.get('/',function(req,res){
 	res.sendFile(__dirname + '/index.html');
@@ -27,12 +30,9 @@ var io = require('socket.io').listen(app.listen(8080));
 
 
 io.sockets.on('connection', function (socket) {
-	numberConnected ++;
-    console.log('Un client est connecté !');
-	socket.emit('idUser',numberConnected);
-	socket.emit('message', variable);
+	socket.emit('update', variable);
 	setInterval(function(){
-    	socket.emit('message', variable); 
+    	socket.emit('update', variable); 
 	}, 100);
 });
 
