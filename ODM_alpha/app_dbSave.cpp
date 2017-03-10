@@ -5,7 +5,7 @@ app_dbSave::app_dbSave()
 
 }
 
-void app_dbSave::start(){
+void app_dbSave::launch(){
     QThread::sleep(1);
     is_running=true;
     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Start of app_dbSave on:";

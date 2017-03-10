@@ -8,11 +8,17 @@
 
 class app_jsonStream : public odm::Application
 {
+    Q_OBJECT
+
     public:
         app_jsonStream();
 
-        void start();
 
+   public slots:
+        /**
+         * @brief start
+         */
+        void launch();
     private:
         const QString HOSTNAME="localhost";
         const qint16 PORT=7070;
