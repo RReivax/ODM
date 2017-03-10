@@ -16,19 +16,23 @@
 
 class app_dbSave : public odm::Application
 {
+    Q_OBJECT
+
     public:
         app_dbSave();
 
         bool get_conf();
 
-        /** @fn void app_dbSave::start()
+    public slots:
+
+        /** @fn void app_dbSave::launch()
              *  @brief will try to connect to the DB with the given info, if succeed, will call init();.
              *  @return nothing.
              *
              *  Uses QtSql libriaries
              *  Set 'DEBUG_ENABLE' to true tu put the verbose mode on.
              */
-        void start();
+        void launch();
 
     private:
         const QString MARKER_DEBUG = "****** APP DB debug : ";
@@ -44,7 +48,7 @@ class app_dbSave : public odm::Application
         int TIME_LAPS = 3;
 
 
-        bool DEBUG_ENABLE = false; // True to enable verbose debug mode
+        bool DEBUG_ENABLE = true; // True to enable verbose debug mode
         bool is_running; /**< Boolean controlling the main loop, of the 'void loop()' (below)*/
 
         /** @fn void app_dbSave::loop()

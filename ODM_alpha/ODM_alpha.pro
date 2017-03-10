@@ -1,5 +1,6 @@
 QT += core
-QT -= gui
+QT += gui
+QT += widgets
 QT += network
 QT += xml
 QT += sql
@@ -19,7 +20,8 @@ SOURCES += main.cpp \
     application.cpp \
     qjsonstack.cpp\
     app_dbSave.cpp \
-    app_jsonStream.cpp
+    app_jsonStream.cpp \
+    cli.cpp
 
 
 # The following define makes your compiler emit warnings if you use
@@ -40,4 +42,5 @@ HEADERS += \
     application.h \
     qjsonstack.h\
     app_dbSave.h \
-    app_jsonStream.h
+    app_jsonStream.h \
+    cli.h

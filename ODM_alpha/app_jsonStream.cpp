@@ -6,7 +6,7 @@ app_jsonStream::app_jsonStream()
 
 }
 
-void app_jsonStream::start()
+void app_jsonStream::launch()
 {
     socket = new QTcpSocket(this);
     socket->connectToHost(HOSTNAME,PORT);
