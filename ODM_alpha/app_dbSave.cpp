@@ -7,6 +7,7 @@ app_dbSave::app_dbSave()
 
 void app_dbSave::start(){
     QThread::sleep(1);
+    is_running=true;
     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Start of app_dbSave on:";
     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << Q_FUNC_INFO << QThread::currentThreadId();
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
@@ -25,7 +26,6 @@ void app_dbSave::start(){
     {
         if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Connected to:";
         if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << db.hostName();
-        is_running = true;
         if(this->init())
             this->loop();
     }
@@ -35,6 +35,7 @@ void app_dbSave::start(){
         if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << db.lastError().text();
     }
     db.close();
+    is_running=false;
 }
 
 bool app_dbSave::get_conf(){
@@ -109,7 +110,15 @@ bool app_dbSave::get_conf(){
 
 bool app_dbSave::init(){
     QSqlQuery query;
+    QSqlQuery query_create;
     bool return_b = false;
+    query_create.prepare("CREATE TABLE main (:id int, :long double, :lat double, :alt double, :date datetime);");
+    query_create.bindValue(":id", TABLE_ID);
+    query_create.bindValue(":long", TABLE_LONG);
+    query_create.bindValue(":lat", TABLE_LAT);
+    query_create.bindValue(":alt", TABLE_ALT);
+    query_create.bindValue(":date", "position"+TABLE_DTE);
+
     if(query.exec("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'odm_db' AND TABLE_NAME = 'main';"))
     {
         if(query.next()){
@@ -119,8 +128,7 @@ bool app_dbSave::init(){
         else {
             if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Trying to create table 'main'...";
             if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "CREATE TABLE main ("+TABLE_ID+" int, "+TABLE_LONG+" double, "+TABLE_LAT+" double, "+TABLE_ALT+" double, position"+TABLE_DTE+" datetime);";
-            if (query.exec("CREATE TABLE main ("+TABLE_ID+" int, "+TABLE_LONG+" double, "+TABLE_LAT+" double, "+TABLE_ALT+" double, position"+TABLE_DTE+" datetime);"))
-            {
+            if (query_create.exec()){
                 if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "created";
                 return_b = true;
             }
@@ -131,8 +139,16 @@ bool app_dbSave::init(){
     return return_b;
 }
 
+
 void app_dbSave::loop(){
-    QSqlQuery query;
+    QSqlQuery query_insert;
+    query_insert.prepare("INSERT INTO `main`(`:id`, `:long`, `:lat`, `:alt`, `:date`) VALUES (:id_v,:long_v,:lat_v,:alt_v,\":date_v\")");
+    query_insert.bindValue(":id", TABLE_ID);
+    query_insert.bindValue(":long", TABLE_LONG);
+    query_insert.bindValue(":lat", TABLE_LAT);
+    query_insert.bindValue(":alt", TABLE_ALT);
+    query_insert.bindValue(":date", "position"+TABLE_DTE);
+
     QString id_drone, longitude, latitude, altitude, date;
     while(is_running){
         if(updateState()){
@@ -143,17 +159,28 @@ void app_dbSave::loop(){
                 altitude = state[i].take(TABLE_ALT).toString();
                 date = state[i].take(TABLE_DTE).toString();
 
+                query_insert.bindValue(":id_v", id_drone);
+                query_insert.bindValue(":long_v", longitude);
+                query_insert.bindValue(":lat_v", latitude);
+                query_insert.bindValue(":alt_v", altitude);
+                query_insert.bindValue(":date_v", date);
+
                 if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "INSERT INTO `main`(`"+TABLE_ID+"`, `"+TABLE_LONG+"`, `"+TABLE_LAT+"`, `"+TABLE_ALT+"`, `positiondate`) VALUES ("+id_drone+","+longitude+","+latitude+","+altitude+",\""+date+"\")";
-                if(query.exec("INSERT INTO `main`(`"+TABLE_ID+"`, `"+TABLE_LONG+"`, `"+TABLE_LAT+"`, `"+TABLE_ALT+"`, `positiondate`) VALUES ("+id_drone+","+longitude+","+latitude+","+altitude+",\""+date+"\")"))
+                if(query_insert.exec())
                 {
                     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Insert success";
                 }
                 else{
                     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Insert Failed !";
-                    if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << query.lastError().text();
+                    if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << query_insert.lastError().text();
                 }
             }
         }
         QThread::sleep(TIME_LAPS);
     }
+}
+
+
+void app_dbSave::stop(){
+    is_running=false;
 }
