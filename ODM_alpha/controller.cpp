@@ -8,7 +8,6 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
     receiver.moveToThread(&rThread);
     dispenser.moveToThread(&tThread);
-    appsvbdd.moveToThread(&appsvbddThread);
 
     qRegisterMetaType<QVector<QJsonObject>>("QVector<QJsonObject>");
     QObject::connect(&tThread, SIGNAL(started()), &dispenser, SIGNAL(requestData()));
@@ -49,9 +48,6 @@ void odm::Controller::launch(){
     rThread.start();
     tThread.start();
 
-    //apptestThread.start();
     appsvbddThread.start();
 
-    //apptest.test();
-    appsvbdd.start();
 }

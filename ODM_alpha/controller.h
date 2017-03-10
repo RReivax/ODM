@@ -11,7 +11,6 @@
 #include "dispenser.h"
 
 #include "application.h"
-#include "app_sv_bdd.h"
 #include "app_map.h"
 
 
@@ -33,7 +32,6 @@ namespace odm{
         Dispenser dispenser;
 
         //Applications
-        app_sv_bdd appsvbdd;
         QThread appsvbddThread;
     };
 }

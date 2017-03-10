@@ -16,8 +16,7 @@ SOURCES += main.cpp \
     receiver.cpp \
     controller.cpp \
     dispenser.cpp \
-    application.cpp \
-    app_sv_bdd.cpp
+    application.cpp
 
 
 # The following define makes your compiler emit warnings if you use
@@ -36,5 +35,4 @@ HEADERS += \
     controller.h \
     dispenser.h \
     application.h \
-    app_sv_bdd.h \
-    app_map.h
+    app_sv_bdd.h

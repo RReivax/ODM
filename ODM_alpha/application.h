@@ -24,6 +24,7 @@ namespace odm{
          * @brief Application constructor.
          */
         Application();
+        bool LOOP;
     public slots:
         /**
          * @fn static void Application::getState(QVector<QVariantMap>* rt_table, QReadWriteLock* lo)
@@ -35,6 +36,7 @@ namespace odm{
          * The two pointers are used in updateState().
          */
         static void getState(QVector<QVariantMap>* rt_table, QReadWriteLock* lo);
+        void askForClosing();
     protected:
         static QVector<QVariantMap> *state_ref;/**< Pointer to QVector<QVariantMap> dispenser.state*/
         static QReadWriteLock *state_lock;/**< Pointer to QReadWriteLock dispenser.lock*/
@@ -47,6 +49,14 @@ namespace odm{
          * Updates the local copy of the most recent drone data set. Returns true if the update was successful, false otherwise.
          */
         bool updateState();
+
+        bool appLoop();
+        bool checkRun();
+        void launch();
+        virtual bool defAppType() = 0;
+        virtual bool loopFct() = 0;
+        virtual bool initApp() = 0;
+        virtual bool closeApp() = 0;
     };
 }
 
