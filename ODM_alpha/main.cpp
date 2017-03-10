@@ -6,7 +6,6 @@ int main(int argc, char *argv[])
     qDebug() << "Initialisation...";
     QApplication a(argc, argv);
 
-
     QCoreApplication::setApplicationName("Open Drone Monitoring");
     QCoreApplication::setApplicationVersion("1.0");
 
@@ -34,26 +33,13 @@ int main(int argc, char *argv[])
     foreach(QString s, serviceList)
         qDebug() << "\t" << s;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     Controller controller;
+    if(serviceAll){
+        controller.launchAll();
+    }
+    else{
+        controller.launch();
+    }
 
-    controller.launch();
     return a.exec();
 }
