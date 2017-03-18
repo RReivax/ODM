@@ -11,8 +11,6 @@
 #include "dispenser.h"
 
 #include "application.h"
-#include "app_map.h"
-
 
 namespace odm{
     class Controller : public QThread
