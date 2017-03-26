@@ -17,11 +17,11 @@ SOURCES += main.cpp \
     receiver.cpp \
     controller.cpp \
     dispenser.cpp \
-    application.cpp \
-    qjsonstack.cpp\
+    qjsonstack.cpp \
     app_dbSave.cpp \
     app_jsonStream.cpp \
-    cli.cpp
+    application.cpp \
+    cli.cpp \
 
 
 # The following define makes your compiler emit warnings if you use
@@ -40,7 +40,7 @@ HEADERS += \
     controller.h \
     dispenser.h \
     application.h \
-    qjsonstack.h\
+    qjsonstack.h \
     app_dbSave.h \
     app_jsonStream.h \
     cli.h

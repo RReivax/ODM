@@ -12,7 +12,6 @@
 #include "app_dbSave.h"
 #include "app_jsonStream.h"
 
-
 namespace odm{
     class Controller : public QThread
     {
