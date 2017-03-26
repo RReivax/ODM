@@ -53,22 +53,26 @@ SOURCES       = ../ODM_alpha/main.cpp \
 		../ODM_alpha/controller.cpp \
 		../ODM_alpha/dispenser.cpp \
 		../ODM_alpha/application.cpp \
-		../ODM_alpha/app_sv_bdd.cpp \
+		../ODM_alpha/qjsonstack.cpp \
+		../ODM_alpha/app_dbSave.cpp \
 		../ODM_alpha/app_jsonStream.cpp moc_receiver.cpp \
 		moc_controller.cpp \
 		moc_dispenser.cpp \
-		moc_application.cpp
+		moc_application.cpp \
+		moc_qjsonstack.cpp
 OBJECTS       = main.o \
 		receiver.o \
 		controller.o \
 		dispenser.o \
 		application.o \
-		app_sv_bdd.o \
+		qjsonstack.o \
+		app_dbSave.o \
 		app_jsonStream.o \
 		moc_receiver.o \
 		moc_controller.o \
 		moc_dispenser.o \
-		moc_application.o
+		moc_application.o \
+		moc_qjsonstack.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -138,13 +142,15 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../ODM_alpha/controller.h \
 		../ODM_alpha/dispenser.h \
 		../ODM_alpha/application.h \
-		../ODM_alpha/app_sv_bdd.h \
+		../ODM_alpha/qjsonstack.h \
+		../ODM_alpha/app_dbSave.h \
 		../ODM_alpha/app_jsonStream.h ../ODM_alpha/main.cpp \
 		../ODM_alpha/receiver.cpp \
 		../ODM_alpha/controller.cpp \
 		../ODM_alpha/dispenser.cpp \
 		../ODM_alpha/application.cpp \
-		../ODM_alpha/app_sv_bdd.cpp \
+		../ODM_alpha/qjsonstack.cpp \
+		../ODM_alpha/app_dbSave.cpp \
 		../ODM_alpha/app_jsonStream.cpp
 QMAKE_TARGET  = ODM_alpha
 DESTDIR       = #avoid trailing-slash linebreak
@@ -331,8 +337,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../ODM_alpha/receiver.h ../ODM_alpha/controller.h ../ODM_alpha/dispenser.h ../ODM_alpha/application.h ../ODM_alpha/app_sv_bdd.h ../ODM_alpha/app_jsonStream.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../ODM_alpha/main.cpp ../ODM_alpha/receiver.cpp ../ODM_alpha/controller.cpp ../ODM_alpha/dispenser.cpp ../ODM_alpha/application.cpp ../ODM_alpha/app_sv_bdd.cpp ../ODM_alpha/app_jsonStream.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../ODM_alpha/receiver.h ../ODM_alpha/controller.h ../ODM_alpha/dispenser.h ../ODM_alpha/application.h ../ODM_alpha/qjsonstack.h ../ODM_alpha/app_dbSave.h ../ODM_alpha/app_jsonStream.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../ODM_alpha/main.cpp ../ODM_alpha/receiver.cpp ../ODM_alpha/controller.cpp ../ODM_alpha/dispenser.cpp ../ODM_alpha/application.cpp ../ODM_alpha/qjsonstack.cpp ../ODM_alpha/app_dbSave.cpp ../ODM_alpha/app_jsonStream.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -355,16 +361,18 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_receiver.cpp moc_controller.cpp moc_dispenser.cpp moc_application.cpp
+compiler_moc_header_make_all: moc_receiver.cpp moc_controller.cpp moc_dispenser.cpp moc_application.cpp moc_qjsonstack.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_receiver.cpp moc_controller.cpp moc_dispenser.cpp moc_application.cpp
-moc_receiver.cpp: ../ODM_alpha/receiver.h
+	-$(DEL_FILE) moc_receiver.cpp moc_controller.cpp moc_dispenser.cpp moc_application.cpp moc_qjsonstack.cpp
+moc_receiver.cpp: ../ODM_alpha/qjsonstack.h \
+		../ODM_alpha/receiver.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/receiver.h -o moc_receiver.cpp
 
-moc_controller.cpp: ../ODM_alpha/receiver.h \
+moc_controller.cpp: ../ODM_alpha/qjsonstack.h \
+		../ODM_alpha/receiver.h \
 		../ODM_alpha/dispenser.h \
 		../ODM_alpha/application.h \
-		../ODM_alpha/app_sv_bdd.h \
+		../ODM_alpha/app_dbSave.h \
 		../ODM_alpha/app_jsonStream.h \
 		../ODM_alpha/controller.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/controller.h -o moc_controller.cpp
@@ -374,6 +382,9 @@ moc_dispenser.cpp: ../ODM_alpha/dispenser.h
 
 moc_application.cpp: ../ODM_alpha/application.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/application.h -o moc_application.cpp
+
+moc_qjsonstack.cpp: ../ODM_alpha/qjsonstack.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/qjsonstack.h -o moc_qjsonstack.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -388,21 +399,24 @@ compiler_clean: compiler_moc_header_clean
 ####### Compile
 
 main.o: ../ODM_alpha/main.cpp ../ODM_alpha/controller.h \
+		../ODM_alpha/qjsonstack.h \
 		../ODM_alpha/receiver.h \
 		../ODM_alpha/dispenser.h \
 		../ODM_alpha/application.h \
-		../ODM_alpha/app_sv_bdd.h \
+		../ODM_alpha/app_dbSave.h \
 		../ODM_alpha/app_jsonStream.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../ODM_alpha/main.cpp
 
-receiver.o: ../ODM_alpha/receiver.cpp ../ODM_alpha/receiver.h
+receiver.o: ../ODM_alpha/receiver.cpp ../ODM_alpha/receiver.h \
+		../ODM_alpha/qjsonstack.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o receiver.o ../ODM_alpha/receiver.cpp
 
 controller.o: ../ODM_alpha/controller.cpp ../ODM_alpha/controller.h \
+		../ODM_alpha/qjsonstack.h \
 		../ODM_alpha/receiver.h \
 		../ODM_alpha/dispenser.h \
 		../ODM_alpha/application.h \
-		../ODM_alpha/app_sv_bdd.h \
+		../ODM_alpha/app_dbSave.h \
 		../ODM_alpha/app_jsonStream.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o controller.o ../ODM_alpha/controller.cpp
 
@@ -412,9 +426,12 @@ dispenser.o: ../ODM_alpha/dispenser.cpp ../ODM_alpha/dispenser.h
 application.o: ../ODM_alpha/application.cpp ../ODM_alpha/application.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o application.o ../ODM_alpha/application.cpp
 
-app_sv_bdd.o: ../ODM_alpha/app_sv_bdd.cpp ../ODM_alpha/app_sv_bdd.h \
+qjsonstack.o: ../ODM_alpha/qjsonstack.cpp ../ODM_alpha/qjsonstack.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qjsonstack.o ../ODM_alpha/qjsonstack.cpp
+
+app_dbSave.o: ../ODM_alpha/app_dbSave.cpp ../ODM_alpha/app_dbSave.h \
 		../ODM_alpha/application.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o app_sv_bdd.o ../ODM_alpha/app_sv_bdd.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o app_dbSave.o ../ODM_alpha/app_dbSave.cpp
 
 app_jsonStream.o: ../ODM_alpha/app_jsonStream.cpp ../ODM_alpha/app_jsonStream.h \
 		../ODM_alpha/application.h
@@ -431,6 +448,9 @@ moc_dispenser.o: moc_dispenser.cpp
 
 moc_application.o: moc_application.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_application.o moc_application.cpp
+
+moc_qjsonstack.o: moc_qjsonstack.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_qjsonstack.o moc_qjsonstack.cpp
 
 ####### Install
 
