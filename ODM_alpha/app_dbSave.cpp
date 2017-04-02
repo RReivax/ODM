@@ -5,7 +5,8 @@ app_dbSave::app_dbSave()
 
 }
 
-void app_dbSave::launch(){
+bool app_dbSave::initApp(){
+    bool correctInit=true;
     QThread::sleep(1);
     is_running=true;
     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Start of app_dbSave on:";
@@ -26,16 +27,20 @@ void app_dbSave::launch(){
     {
         if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Connected to:";
         if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << db.hostName();
-        if(this->init())
-            this->loop();
+        correctInit = this->init();
     }
     else
     {
+        correctInit=false;
         if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Connecion failed";
         if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << db.lastError().text();
     }
-    db.close();
-    is_running=false;
+
+    return correctInit;
+}
+
+bool app_dbSave::defAppType(){
+    return isLoopApp;
 }
 
 bool app_dbSave::get_conf(){
@@ -140,7 +145,7 @@ bool app_dbSave::init(){
 }
 
 
-void app_dbSave::loop(){
+bool app_dbSave::appLoop(){
     QSqlQuery query_insert;
     query_insert.prepare("INSERT INTO `main`(`:id`, `:long`, `:lat`, `:alt`, `:date`) VALUES (:id_v,:long_v,:lat_v,:alt_v,\":date_v\")");
     query_insert.bindValue(":id", TABLE_ID);
@@ -178,9 +183,11 @@ void app_dbSave::loop(){
         }
         QThread::sleep(TIME_LAPS);
     }
+    return true;
 }
 
 
-void app_dbSave::stop(){
+void app_dbSave::closeApp(){
     is_running=false;
+    return(db.close());
 }
