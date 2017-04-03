@@ -12,35 +12,31 @@ bool app_jsonStream::defAppType()
     return true;
 }
 
-bool loopFct()
+bool app_jsonStream::loopFct()
 {
-    qDebug() << "App loop";
+    if(updateState()){
+        if(state.length() > 0){
+            for(int i = 0;i<state.length();i++){
 
-    while(is_running){
-        if(updateState()){
-            if(state.length() > 0){
-                for(int i = 0;i<state.length();i++){
-
-                    QJsonDocument data(QJsonObject::fromVariantMap(state[i]));
-                    socket->write(data.toJson(QJsonDocument::Compact));
-                    socket->waitForBytesWritten(-1);
-                    qDebug() << data.toJson(QJsonDocument::Compact);
-                }
+                QJsonDocument data(QJsonObject::fromVariantMap(state[i]));
+                socket->write(data.toJson(QJsonDocument::Compact));
+                socket->waitForBytesWritten(-1);
+                qDebug() << data.toJson(QJsonDocument::Compact);
             }
         }
-        else{
-            qDebug() << "No updates";
-        }
-        QThread::sleep(TIME_LAPS);
     }
+    else{
+        qDebug() << "No updates";
+    }
+    QThread::sleep(TIME_LAPS);
+
     return true;
 }
 
-bool initApp()
+bool app_jsonStream::initApp()
 {
     socket = new QTcpSocket(this);
     socket->connectToHost(HOSTNAME,PORT);
-    is_running = true;
     if(socket->waitForConnected(3000))
     {
         qDebug() << "Connected to the TCP server";
@@ -48,7 +44,7 @@ bool initApp()
     return true;
 }
 
-bool closeApp()
+bool app_jsonStream::closeApp()
 {
 
 }
