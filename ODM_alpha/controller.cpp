@@ -183,13 +183,10 @@ void odm::Controller::processCommand(QString cmd){
                 this->quit();
             break;
 
-<<<<<<< HEAD
+
             default:
                 qDebug() << l[0] << " is not a valid component. Type \"help\" for more information";
         }
     }
-=======
-    appsvbddThread.start();
->>>>>>> ft_app2
 
 }
