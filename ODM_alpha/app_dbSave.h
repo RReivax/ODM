@@ -79,6 +79,7 @@ class app_dbSave : public odm::Application
         QString TABLE_ID = "id";
         QString TABLE_LONG = "longitude";
         int TIME_LAPS = 3;
+        QSqlDatabase db;
 
         bool DEBUG_ENABLE = true; // True to enable verbose debug mode
         bool is_running; /**< Boolean controlling the main loop, of the 'void loop()' (below)*/
