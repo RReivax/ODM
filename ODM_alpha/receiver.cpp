@@ -34,24 +34,6 @@ void odm::Receiver::startServer(){
     qDebug() << Q_FUNC_INFO << statusLabel;
     connect(tcpServer, SIGNAL(newConnection()), this, SLOT(newClient()));
     qDebug() << tcpServer->serverAddress();
-
-
-    //for testing purposes in dispenser
-   /* QByteArray val;
-    //QFile file("C:/Users/Gauthier/Documents/Scolaire/ING4/PPE/Git/build-ODM_alpha-Desktop_Qt_5_7_0_MinGW_32bit-Debug/debug/test.json");
-    QFile file("C:/Users/Xavier/Desktop/test.json");
-    if(!file.open(QIODevice::ReadOnly)){
-        qDebug() << Q_FUNC_INFO << file.error();
-        return;
-    }else{
-        val = file.readAll();
-        file.close();
-        qWarning() << val;
-        QJsonDocument d = QJsonDocument::fromJson(val);
-        QJsonObject test = d.object();
-        flightData[test.value("name").toString()].push(test);
-        qDebug() << "Lat = " << flightData["ThisIsMyName"].top()["latitude"].toDouble();
-    }*/
 }
 
 /**
@@ -83,13 +65,14 @@ void odm::Receiver::InitClient(){
     QByteArray *buffer = buffers.value(socket);
     QObject::disconnect(socket, SIGNAL(readyRead()), this, SLOT(InitClient()));
     bool error=false;
+    QJsonObject newClient;
 
     while (socket->bytesAvailable() > 0) {
         buffer->append(socket->readAll());
     }
     if (!QJsonDocument::fromJson(*buffer).isNull()){
         qDebug() << "New new client";
-        QJsonObject newClient = QJsonDocument::fromJson(*buffer).object();
+        newClient = QJsonDocument::fromJson(*buffer).object();
         for( QList<QString>::Iterator name = flightData.keys().begin(); name!= flightData.keys().end() ; name++ )
         {
             if(*name == newClient.value("name").toString())
@@ -107,6 +90,7 @@ void odm::Receiver::InitClient(){
     {
         if(socket->write("SUCCESS")<0)
             qDebug()<<"Fail to send Success message";
+        flightData[newClient.value("name").toString()].push(newClient);
         QObject::connect(socket, SIGNAL(readyRead()), this, SLOT(readSocket()));
     }
 }
@@ -171,6 +155,7 @@ void odm::Receiver::stackData(QByteArray toStack){
             QMap<QString, QVariant> tmp = QJsonDocument::fromJson(toStack).object().toVariantMap();
     }
 }
+<<<<<<< HEAD
 void odm::Receiver::RemoveStack()
 {
     if(!toDelete.isEmpty())
@@ -183,4 +168,11 @@ void odm::Receiver::RemoveStack()
             }
         }
     }
+=======
+
+void odm::Receiver::stopServer(){
+    this->tcpServer->close();
+    emit readyToStop();
+    qDebug() << "Server is down.";
+>>>>>>> 59d80cf76a0e345cfc7649f0be770c3e0628b53a
 }

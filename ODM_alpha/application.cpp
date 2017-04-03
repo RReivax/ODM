@@ -1,7 +1,5 @@
 #include "application.h"
 
-
-
 QVector<QVariantMap>* odm::Application::state_ref = NULL;
 QReadWriteLock* odm::Application::state_lock = NULL;
 
@@ -26,4 +24,36 @@ bool odm::Application::updateState(){
         return true;
     }
     return false;
+}
+
+void odm::Application::launch(){
+    LOOP = false;
+    LOOP = defAppType();
+    if(LOOP && initApp()){
+       bool closed = appLoop();
+         if(closed){
+            QThread::currentThread()->exit();
+         }else{
+            qDebug() << "Error closing the application " << this->metaObject()->className() << ". Forcing closing.";
+            QThread::currentThread()->terminate();
+         }
+    }
+}
+
+bool odm::Application::appLoop(){
+    bool interupt = true;
+    while((!QThread::currentThread()->isInterruptionRequested())&&interupt){
+        interupt = loopFct();
+    }
+    return closeApp();
+}
+
+void odm::Application::askForClosing(){
+    bool closed = closeApp();
+    if(closed){
+        QThread::currentThread()->exit();
+    }else{
+        qDebug() << "Error closing the application " << this->metaObject()->className() << ". Forcing closing.";
+        QThread::currentThread()->terminate();
+    }
 }

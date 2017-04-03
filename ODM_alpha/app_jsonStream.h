@@ -3,15 +3,24 @@
 
 #include <QTcpSocket>
 #include <QJsonObject>
- #include <QJsonDocument>
+#include <QJsonDocument>
 #include "application.h"
 
 class app_jsonStream : public odm::Application
 {
+    Q_OBJECT
+
     public:
         app_jsonStream();
 
-        void start();
+
+
+   public slots:
+        bool defAppType();
+        bool loopFct();
+        bool initApp();
+        bool closeApp();
+
 
     private:
         const QString HOSTNAME="localhost";
@@ -20,10 +29,6 @@ class app_jsonStream : public odm::Application
 
         QTcpSocket *socket;
 
-        bool is_running; /**< Boolean controlling the main loop, of the 'void loop()' (below)*/
 
-        void loop();
-
-        bool init();
 };
 #endif

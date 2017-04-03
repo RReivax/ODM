@@ -19,9 +19,14 @@ namespace odm {
             void noDataToTransfer();
 
             void dataReceived(QByteArray);
+<<<<<<< HEAD
             void stateToDelete(QString);
+=======
+            void readyToStop();
+>>>>>>> 59d80cf76a0e345cfc7649f0be770c3e0628b53a
         public slots:
             void startServer();
+            void stopServer();
 
             void newClient();
             void disconnected();
