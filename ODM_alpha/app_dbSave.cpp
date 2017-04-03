@@ -11,7 +11,7 @@ bool app_dbSave::initApp(){
     is_running=true;
     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Start of app_dbSave on:";
     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << Q_FUNC_INFO << QThread::currentThreadId();
-    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+    db = QSqlDatabase::addDatabase("QMYSQL");
     if(this->get_conf()){
         if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Config file loaded";
     }
@@ -189,5 +189,6 @@ bool app_dbSave::loopFct(){
 
 bool app_dbSave::closeApp(){
     is_running=false;
-    return(db.close());
+    db.close();
+    return true;
 }
