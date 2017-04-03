@@ -65,13 +65,14 @@ void odm::Receiver::InitClient(){
     QByteArray *buffer = buffers.value(socket);
     QObject::disconnect(socket, SIGNAL(readyRead()), this, SLOT(InitClient()));
     bool error=false;
+    QJsonObject newClient;
 
     while (socket->bytesAvailable() > 0) {
         buffer->append(socket->readAll());
     }
     if (!QJsonDocument::fromJson(*buffer).isNull()){
         qDebug() << "New new client";
-        QJsonObject newClient = QJsonDocument::fromJson(*buffer).object();
+        newClient = QJsonDocument::fromJson(*buffer).object();
         for( QList<QString>::Iterator name = flightData.keys().begin(); name!= flightData.keys().end() ; name++ )
         {
             if(*name == newClient.value("name").toString())
@@ -89,6 +90,7 @@ void odm::Receiver::InitClient(){
     {
         if(socket->write("SUCCESS")<0)
             qDebug()<<"Fail to send Success message";
+        flightData[newClient.value("name").toString()].push(newClient);
         QObject::connect(socket, SIGNAL(readyRead()), this, SLOT(readSocket()));
     }
 }

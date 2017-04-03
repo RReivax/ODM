@@ -9,7 +9,7 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
     receiver.moveToThread(&rThread);
     dispenser.moveToThread(&dThread);
 
-    appdbSave.moveToThread(&appdbSaveThread);
+    //appdbSave.moveToThread(&appdbSaveThread);
     appjsonStream.moveToThread(&appjsonStreamThread);
 
     qRegisterMetaType<QVector<QJsonObject>>("QVector<QJsonObject>");
@@ -183,13 +183,9 @@ void odm::Controller::processCommand(QString cmd){
                 this->quit();
             break;
 
-<<<<<<< HEAD
             default:
                 qDebug() << l[0] << " is not a valid component. Type \"help\" for more information";
         }
     }
-=======
-    appsvbddThread.start();
->>>>>>> ft_app2
 
 }
