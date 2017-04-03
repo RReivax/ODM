@@ -65,7 +65,7 @@ void odm::Controller::launchAll(){
     rThread.start();
     dThread.start();
 
-     appdbSaveThread.start();
+    appdbSaveThread.start();
     appjsonStreamThread.start();
 }
 
@@ -78,6 +78,8 @@ void odm::Controller::launch(){
     this->start();
 
     cli.startReading();
+    rThread.start();
+    dThread.start();
 }
 
 void odm::Controller::processCommand(QString cmd){
