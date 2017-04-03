@@ -63,7 +63,7 @@ void odm::Controller::launchAll(){
     rThread.start();
     dThread.start();
 
-    appdbSaveThread.start();
+     appdbSaveThread.start();
     appjsonStreamThread.start();
 }
 

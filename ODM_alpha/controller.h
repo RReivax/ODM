@@ -44,9 +44,9 @@ namespace odm{
         CLI cli;
 
         //Applications
-        //app_dbSave appdbSave;
+        app_dbSave appdbSave;
         QThread appdbSaveThread;
-        //app_jsonStream appjsonStream;
+        app_jsonStream appjsonStream;
         QThread appjsonStreamThread;
     };
 }
