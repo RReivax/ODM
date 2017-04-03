@@ -44,6 +44,14 @@ namespace odm{
          * Only works for application not based on a looping function (where LOOP is false).
          */
         void askForClosing();
+
+        /**
+         * @fn void Application::launch()
+         * @brief Starts the application.
+         *
+         * Calls Application::initApp() and Application::appLoop() if LOOP is true.
+         */
+        void launch();
     protected:
         static QVector<QVariantMap> *state_ref;/**< Pointer to QVector<QVariantMap> dispenser.state*/
         static QReadWriteLock *state_lock;/**< Pointer to QReadWriteLock dispenser.lock*/
@@ -64,13 +72,7 @@ namespace odm{
          * Stops the loop if an interuption is requested from the controller. Returns true if the loop ended properly (if closeApp() was successful).
          */
         bool appLoop();
-        /**
-         * @fn void Application::launch()
-         * @brief Starts the application.
-         *
-         * Calls Application::initApp() and Application::appLoop() if LOOP is true.
-         */
-        void launch();
+
         /**
          * @fn virtual bool Application::defAppType()
          * @brief Sets LOOP to true or false depending on the type of application.

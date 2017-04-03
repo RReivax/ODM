@@ -23,24 +23,31 @@ class app_dbSave : public odm::Application
 
         bool get_conf();
 
+        /** If this is a loop application, which means has a appLoop() function
+        */
+        bool LOOP = true;
+
     public slots:
 
-        /** @fn void app_dbSave::launch()
+        /** @fn void app_dbSave::initApp()
              *  @brief will try to connect to the DB with the given info, if succeed, will call init();.
-             *  @return nothing.
+             *  @return true if everything is fine.
              *
              *  Uses QtSql libriaries
              *  Set 'DEBUG_ENABLE' to true tu put the verbose mode on.
              */
-        void launch();
+        bool initApp();
 
-        /** @fn void app_dbSave::stop();
-         * @brief set the is_running boolean to false
-         * @return nothing.
+        /** @fn bool app_dbSave::stop();
+         * @brief set the is_running boolean to false and try to close the DB
+         * @return the return of db.close().
          *
          * Set the 'is_running' boolean to false
          */
-        void stop();
+        bool closeApp();
+
+        bool defAppType();
+
 
     private:
         /**
@@ -72,21 +79,21 @@ class app_dbSave : public odm::Application
         QString TABLE_ID = "id";
         QString TABLE_LONG = "longitude";
         int TIME_LAPS = 3;
+        QSqlDatabase db;
 
-        bool isLoopApp = true; //If this is a loop application, which means has a appLoop() function
         bool DEBUG_ENABLE = true; // True to enable verbose debug mode
         bool is_running; /**< Boolean controlling the main loop, of the 'void loop()' (below)*/
 
-        /** @fn void app_dbSave::loop()
+        /** @fn void app_dbSave::loopFct()
              *  @brief Each TIME_LAPS seconds, save in the DB the state table.
              *  @return nothing.
              *
              *  Uses QtSql libriaries
              *  Set 'DEBUG_ENABLE' to true tu put the verbose mode on.
              */
-        void loop();
+        bool loopFct();
 
-        /** @fn void app_dbSave::loop()
+        /** @fn void app_dbSave::init()
              *  @brief heck if the table exist, if not, try to create it.
              *  @return true if the table is ready false else.
              *

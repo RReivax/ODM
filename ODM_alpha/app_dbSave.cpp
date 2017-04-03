@@ -11,7 +11,7 @@ bool app_dbSave::initApp(){
     is_running=true;
     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Start of app_dbSave on:";
     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << Q_FUNC_INFO << QThread::currentThreadId();
-    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+    db = QSqlDatabase::addDatabase("QMYSQL");
     if(this->get_conf()){
         if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Config file loaded";
     }
@@ -40,7 +40,7 @@ bool app_dbSave::initApp(){
 }
 
 bool app_dbSave::defAppType(){
-    return isLoopApp;
+    return LOOP;
 }
 
 bool app_dbSave::get_conf(){
@@ -145,7 +145,7 @@ bool app_dbSave::init(){
 }
 
 
-bool app_dbSave::appLoop(){
+bool app_dbSave::loopFct(){
     QSqlQuery query_insert;
     query_insert.prepare("INSERT INTO `main`(`:id`, `:long`, `:lat`, `:alt`, `:date`) VALUES (:id_v,:long_v,:lat_v,:alt_v,\":date_v\")");
     query_insert.bindValue(":id", TABLE_ID);
@@ -187,7 +187,8 @@ bool app_dbSave::appLoop(){
 }
 
 
-void app_dbSave::closeApp(){
+bool app_dbSave::closeApp(){
     is_running=false;
-    return(db.close());
+    db.close();
+    return true;
 }
