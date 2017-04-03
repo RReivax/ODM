@@ -76,7 +76,7 @@ class app_dbSave : public odm::Application
         QString TABLE_LAT = "latitude";
         QString TABLE_ALT = "altitude";
         QString TABLE_DTE = "date";
-        QString TABLE_ID = "id";
+        QString TABLE_ID = "name";
         QString TABLE_LONG = "longitude";
         int TIME_LAPS = 3;
         QSqlDatabase db;

@@ -40,7 +40,7 @@ bool app_dbSave::initApp(){
 }
 
 bool app_dbSave::defAppType(){
-    return LOOP;
+    return true;
 }
 
 bool app_dbSave::get_conf(){
@@ -117,12 +117,7 @@ bool app_dbSave::init(){
     QSqlQuery query;
     QSqlQuery query_create;
     bool return_b = false;
-    query_create.prepare("CREATE TABLE main (:id int, :long double, :lat double, :alt double, :date datetime);");
-    query_create.bindValue(":id", TABLE_ID);
-    query_create.bindValue(":long", TABLE_LONG);
-    query_create.bindValue(":lat", TABLE_LAT);
-    query_create.bindValue(":alt", TABLE_ALT);
-    query_create.bindValue(":date", "position"+TABLE_DTE);
+    query_create.prepare("CREATE TABLE main (id"+TABLE_ID+" text, "+TABLE_LONG+" double, "+TABLE_LAT+" double, "+TABLE_ALT+" double, position"+TABLE_DTE+" datetime);");
 
     if(query.exec("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'odm_db' AND TABLE_NAME = 'main';"))
     {
@@ -132,13 +127,16 @@ bool app_dbSave::init(){
         }
         else {
             if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Trying to create table 'main'...";
-            if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "CREATE TABLE main ("+TABLE_ID+" int, "+TABLE_LONG+" double, "+TABLE_LAT+" double, "+TABLE_ALT+" double, position"+TABLE_DTE+" datetime);";
+            if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "CREATE TABLE main (id"+TABLE_ID+" text, "+TABLE_LONG+" double, "+TABLE_LAT+" double, "+TABLE_ALT+" double, position"+TABLE_DTE+" datetime);";
             if (query_create.exec()){
                 if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "created";
                 return_b = true;
             }
             else
+            {
                 if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Error while creating the table.";
+                if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << query_create.lastError().text();
+            }
         }
     }
     return return_b;
@@ -147,16 +145,10 @@ bool app_dbSave::init(){
 
 bool app_dbSave::loopFct(){
     QSqlQuery query_insert;
-    query_insert.prepare("INSERT INTO `main`(`:id`, `:long`, `:lat`, `:alt`, `:date`) VALUES (:id_v,:long_v,:lat_v,:alt_v,\":date_v\")");
-    query_insert.bindValue(":id", TABLE_ID);
-    query_insert.bindValue(":long", TABLE_LONG);
-    query_insert.bindValue(":lat", TABLE_LAT);
-    query_insert.bindValue(":alt", TABLE_ALT);
-    query_insert.bindValue(":date", "position"+TABLE_DTE);
-
+    query_insert.prepare("INSERT INTO `main`(`id"+TABLE_ID+"`, `"+TABLE_LONG+"`, `"+TABLE_LAT+"`, `"+TABLE_ALT+"`, `position"+TABLE_DTE+"`) VALUES (:id_v,:long_v,:lat_v,:alt_v,:date_v)");
     QString id_drone, longitude, latitude, altitude, date;
-    while(is_running){
         if(updateState()){
+             if (DEBUG_ENABLE) qDebug() << "state syze :" << state.length();
             for(int i=0 ; i<state.length() ; i++){
                 id_drone = state[i].take(TABLE_ID).toString();
                 longitude = state[i].take(TABLE_LONG).toString();
@@ -170,7 +162,7 @@ bool app_dbSave::loopFct(){
                 query_insert.bindValue(":alt_v", altitude);
                 query_insert.bindValue(":date_v", date);
 
-                if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "INSERT INTO `main`(`"+TABLE_ID+"`, `"+TABLE_LONG+"`, `"+TABLE_LAT+"`, `"+TABLE_ALT+"`, `positiondate`) VALUES ("+id_drone+","+longitude+","+latitude+","+altitude+",\""+date+"\")";
+                if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "INSERT INTO `main`(`id"+TABLE_ID+"`, `"+TABLE_LONG+"`, `"+TABLE_LAT+"`, `"+TABLE_ALT+"`, `positiondate`) VALUES ("+id_drone+","+longitude+","+latitude+","+altitude+","+date+")";
                 if(query_insert.exec())
                 {
                     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Insert success";
@@ -182,7 +174,6 @@ bool app_dbSave::loopFct(){
             }
         }
         QThread::sleep(TIME_LAPS);
-    }
     return true;
 }
 
