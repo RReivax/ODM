@@ -155,7 +155,6 @@ void odm::Receiver::stackData(QByteArray toStack){
             QMap<QString, QVariant> tmp = QJsonDocument::fromJson(toStack).object().toVariantMap();
     }
 }
-<<<<<<< HEAD
 void odm::Receiver::RemoveStack()
 {
     if(!toDelete.isEmpty())
@@ -168,11 +167,11 @@ void odm::Receiver::RemoveStack()
             }
         }
     }
-=======
-
-void odm::Receiver::stopServer(){
+}
+void odm::Receiver::stopServer()
+{
     this->tcpServer->close();
     emit readyToStop();
     qDebug() << "Server is down.";
->>>>>>> 59d80cf76a0e345cfc7649f0be770c3e0628b53a
+
 }
