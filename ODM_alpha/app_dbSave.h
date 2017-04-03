@@ -16,22 +16,52 @@
 
 class app_dbSave : public odm::Application
 {
+    Q_OBJECT
+
     public:
         app_dbSave();
 
         bool get_conf();
 
-        /** @fn void app_dbSave::start()
+    public slots:
+
+        /** @fn void app_dbSave::launch()
              *  @brief will try to connect to the DB with the given info, if succeed, will call init();.
              *  @return nothing.
              *
              *  Uses QtSql libriaries
              *  Set 'DEBUG_ENABLE' to true tu put the verbose mode on.
              */
-        void start();
+        void launch();
+
+        /** @fn void app_dbSave::stop();
+         * @brief set the is_running boolean to false
+         * @return nothing.
+         *
+         * Set the 'is_running' boolean to false
+         */
+        void stop();
 
     private:
+        /**
+         * @brief MARKER_DEBUG
+         *
+         * This is the default string which get inhead of every
+         * debbuging message of the application
+         */
         const QString MARKER_DEBUG = "****** APP DB debug : ";
+
+        /**
+         * @brief DATA BASE variables
+         *
+         * Those are the declaration of the varaible used
+         * to connect the MySQL DB
+         * to modify the tables inside it
+         *
+         * They are filled with the default value as below
+         * the value that will be used are stored in config_db.xml
+         *
+         */
         QString DB_HOSTNAME="localhost";
         QString DB_USERNAME="root";
         QString DB_PASSWORD="";
@@ -44,7 +74,7 @@ class app_dbSave : public odm::Application
         int TIME_LAPS = 3;
 
 
-        bool DEBUG_ENABLE = false; // True to enable verbose debug mode
+        bool DEBUG_ENABLE = true; // True to enable verbose debug mode
         bool is_running; /**< Boolean controlling the main loop, of the 'void loop()' (below)*/
 
         /** @fn void app_dbSave::loop()

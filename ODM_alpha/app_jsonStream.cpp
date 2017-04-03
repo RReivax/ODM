@@ -6,20 +6,13 @@ app_jsonStream::app_jsonStream()
 
 }
 
-void app_jsonStream::start()
-{
-    socket = new QTcpSocket(this);
-    socket->connectToHost(HOSTNAME,PORT);
-    is_running = true;
-    if(socket->waitForConnected(3000))
-    {
-        qDebug() << "Connected to the TCP server";
-        this->loop();
-    }
 
+bool app_jsonStream::defAppType()
+{
+    return true;
 }
 
-void app_jsonStream::loop()
+bool loopFct()
 {
     qDebug() << "App loop";
 
@@ -40,10 +33,23 @@ void app_jsonStream::loop()
         }
         QThread::sleep(TIME_LAPS);
     }
+    return true;
 }
 
-bool app_jsonStream::init()
+bool initApp()
 {
+    socket = new QTcpSocket(this);
+    socket->connectToHost(HOSTNAME,PORT);
+    is_running = true;
+    if(socket->waitForConnected(3000))
+    {
+        qDebug() << "Connected to the TCP server";
+    }
     return true;
+}
+
+bool closeApp()
+{
+
 }
 

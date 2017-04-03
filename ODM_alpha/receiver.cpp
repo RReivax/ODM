@@ -34,24 +34,6 @@ void odm::Receiver::startServer(){
     qDebug() << Q_FUNC_INFO << statusLabel;
     connect(tcpServer, SIGNAL(newConnection()), this, SLOT(newClient()));
     qDebug() << tcpServer->serverAddress();
-
-
-    //for testing purposes in dispenser
-   /* QByteArray val;
-    //QFile file("C:/Users/Gauthier/Documents/Scolaire/ING4/PPE/Git/build-ODM_alpha-Desktop_Qt_5_7_0_MinGW_32bit-Debug/debug/test.json");
-    QFile file("C:/Users/Xavier/Desktop/test.json");
-    if(!file.open(QIODevice::ReadOnly)){
-        qDebug() << Q_FUNC_INFO << file.error();
-        return;
-    }else{
-        val = file.readAll();
-        file.close();
-        qWarning() << val;
-        QJsonDocument d = QJsonDocument::fromJson(val);
-        QJsonObject test = d.object();
-        flightData[test.value("name").toString()].push(test);
-        qDebug() << "Lat = " << flightData["ThisIsMyName"].top()["latitude"].toDouble();
-    }*/
 }
 
 /**
@@ -169,3 +151,8 @@ void odm::Receiver::stackData(QByteArray toStack){
     }
 }
 
+void odm::Receiver::stopServer(){
+    this->tcpServer->close();
+    emit readyToStop();
+    qDebug() << "Server is down.";
+}

@@ -12,10 +12,10 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_SQL_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_SQL_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -m64 -pipe -g -std=c++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../ODM_alpha -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -isystem /usr/include/x86_64-linux-gnu/qt5/QtXml -isystem /usr/include/x86_64-linux-gnu/qt5/QtSql -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+INCPATH       = -I../ODM_alpha -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -isystem /usr/include/x86_64-linux-gnu/qt5/QtXml -isystem /usr/include/x86_64-linux-gnu/qt5/QtSql -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = ODM_alpha1.0.0
 DISTDIR = /home/oscar/Documents/QT/ODM/build-ODM_alpha-Desktop-Debug/.tmp/ODM_alpha1.0.0
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -lQt5Network -lQt5Xml -lQt5Sql -lQt5Core -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lQt5Widgets -lQt5Gui -lQt5Network -lQt5Xml -lQt5Sql -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -52,27 +52,35 @@ SOURCES       = ../ODM_alpha/main.cpp \
 		../ODM_alpha/receiver.cpp \
 		../ODM_alpha/controller.cpp \
 		../ODM_alpha/dispenser.cpp \
-		../ODM_alpha/application.cpp \
 		../ODM_alpha/qjsonstack.cpp \
 		../ODM_alpha/app_dbSave.cpp \
-		../ODM_alpha/app_jsonStream.cpp moc_receiver.cpp \
+		../ODM_alpha/app_jsonStream.cpp \
+		../ODM_alpha/application.cpp \
+		../ODM_alpha/cli.cpp moc_receiver.cpp \
 		moc_controller.cpp \
 		moc_dispenser.cpp \
 		moc_application.cpp \
-		moc_qjsonstack.cpp
+		moc_qjsonstack.cpp \
+		moc_app_dbSave.cpp \
+		moc_app_jsonStream.cpp \
+		moc_cli.cpp
 OBJECTS       = main.o \
 		receiver.o \
 		controller.o \
 		dispenser.o \
-		application.o \
 		qjsonstack.o \
 		app_dbSave.o \
 		app_jsonStream.o \
+		application.o \
+		cli.o \
 		moc_receiver.o \
 		moc_controller.o \
 		moc_dispenser.o \
 		moc_application.o \
-		moc_qjsonstack.o
+		moc_qjsonstack.o \
+		moc_app_dbSave.o \
+		moc_app_jsonStream.o \
+		moc_cli.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -133,6 +141,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resources.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/moc.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/unix/opengl.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/uic.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/unix/thread.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/testcase_targets.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
@@ -144,14 +154,16 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../ODM_alpha/application.h \
 		../ODM_alpha/qjsonstack.h \
 		../ODM_alpha/app_dbSave.h \
-		../ODM_alpha/app_jsonStream.h ../ODM_alpha/main.cpp \
+		../ODM_alpha/app_jsonStream.h \
+		../ODM_alpha/cli.h ../ODM_alpha/main.cpp \
 		../ODM_alpha/receiver.cpp \
 		../ODM_alpha/controller.cpp \
 		../ODM_alpha/dispenser.cpp \
-		../ODM_alpha/application.cpp \
 		../ODM_alpha/qjsonstack.cpp \
 		../ODM_alpha/app_dbSave.cpp \
-		../ODM_alpha/app_jsonStream.cpp
+		../ODM_alpha/app_jsonStream.cpp \
+		../ODM_alpha/application.cpp \
+		../ODM_alpha/cli.cpp
 QMAKE_TARGET  = ODM_alpha
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = ODM_alpha
@@ -242,12 +254,16 @@ Makefile: ../ODM_alpha/ODM_alpha.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resources.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/moc.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/unix/opengl.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/uic.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/unix/thread.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/testcase_targets.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		../ODM_alpha/ODM_alpha.pro \
+		/usr/lib/x86_64-linux-gnu/libQt5Widgets.prl \
+		/usr/lib/x86_64-linux-gnu/libQt5Gui.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Network.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Xml.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Sql.prl \
@@ -313,12 +329,16 @@ Makefile: ../ODM_alpha/ODM_alpha.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resources.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/moc.prf:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/unix/opengl.prf:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/uic.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/unix/thread.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/testcase_targets.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf:
 ../ODM_alpha/ODM_alpha.pro:
+/usr/lib/x86_64-linux-gnu/libQt5Widgets.prl:
+/usr/lib/x86_64-linux-gnu/libQt5Gui.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Network.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Xml.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Sql.prl:
@@ -337,8 +357,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../ODM_alpha/receiver.h ../ODM_alpha/controller.h ../ODM_alpha/dispenser.h ../ODM_alpha/application.h ../ODM_alpha/qjsonstack.h ../ODM_alpha/app_dbSave.h ../ODM_alpha/app_jsonStream.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../ODM_alpha/main.cpp ../ODM_alpha/receiver.cpp ../ODM_alpha/controller.cpp ../ODM_alpha/dispenser.cpp ../ODM_alpha/application.cpp ../ODM_alpha/qjsonstack.cpp ../ODM_alpha/app_dbSave.cpp ../ODM_alpha/app_jsonStream.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../ODM_alpha/receiver.h ../ODM_alpha/controller.h ../ODM_alpha/dispenser.h ../ODM_alpha/application.h ../ODM_alpha/qjsonstack.h ../ODM_alpha/app_dbSave.h ../ODM_alpha/app_jsonStream.h ../ODM_alpha/cli.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../ODM_alpha/main.cpp ../ODM_alpha/receiver.cpp ../ODM_alpha/controller.cpp ../ODM_alpha/dispenser.cpp ../ODM_alpha/qjsonstack.cpp ../ODM_alpha/app_dbSave.cpp ../ODM_alpha/app_jsonStream.cpp ../ODM_alpha/application.cpp ../ODM_alpha/cli.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -361,33 +381,47 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_receiver.cpp moc_controller.cpp moc_dispenser.cpp moc_application.cpp moc_qjsonstack.cpp
+compiler_moc_header_make_all: moc_receiver.cpp moc_controller.cpp moc_dispenser.cpp moc_application.cpp moc_qjsonstack.cpp moc_app_dbSave.cpp moc_app_jsonStream.cpp moc_cli.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_receiver.cpp moc_controller.cpp moc_dispenser.cpp moc_application.cpp moc_qjsonstack.cpp
+	-$(DEL_FILE) moc_receiver.cpp moc_controller.cpp moc_dispenser.cpp moc_application.cpp moc_qjsonstack.cpp moc_app_dbSave.cpp moc_app_jsonStream.cpp moc_cli.cpp
 moc_receiver.cpp: ../ODM_alpha/qjsonstack.h \
 		../ODM_alpha/receiver.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/receiver.h -o moc_receiver.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/receiver.h -o moc_receiver.cpp
 
 moc_controller.cpp: ../ODM_alpha/qjsonstack.h \
 		../ODM_alpha/receiver.h \
 		../ODM_alpha/dispenser.h \
+		../ODM_alpha/cli.h \
 		../ODM_alpha/application.h \
 		../ODM_alpha/app_dbSave.h \
 		../ODM_alpha/app_jsonStream.h \
 		../ODM_alpha/controller.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/controller.h -o moc_controller.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/controller.h -o moc_controller.cpp
 
 moc_dispenser.cpp: ../ODM_alpha/dispenser.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/dispenser.h -o moc_dispenser.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/dispenser.h -o moc_dispenser.cpp
 
 moc_application.cpp: ../ODM_alpha/application.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/application.h -o moc_application.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/application.h -o moc_application.cpp
 
 moc_qjsonstack.cpp: ../ODM_alpha/qjsonstack.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/qjsonstack.h -o moc_qjsonstack.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/qjsonstack.h -o moc_qjsonstack.cpp
+
+moc_app_dbSave.cpp: ../ODM_alpha/application.h \
+		../ODM_alpha/app_dbSave.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/app_dbSave.h -o moc_app_dbSave.cpp
+
+moc_app_jsonStream.cpp: ../ODM_alpha/application.h \
+		../ODM_alpha/app_jsonStream.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/app_jsonStream.h -o moc_app_jsonStream.cpp
+
+moc_cli.cpp: ../ODM_alpha/cli.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/oscar/Documents/QT/ODM/ODM_alpha -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtSql -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ODM_alpha/cli.h -o moc_cli.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
+compiler_uic_make_all:
+compiler_uic_clean:
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
 compiler_yacc_impl_make_all:
@@ -402,6 +436,7 @@ main.o: ../ODM_alpha/main.cpp ../ODM_alpha/controller.h \
 		../ODM_alpha/qjsonstack.h \
 		../ODM_alpha/receiver.h \
 		../ODM_alpha/dispenser.h \
+		../ODM_alpha/cli.h \
 		../ODM_alpha/application.h \
 		../ODM_alpha/app_dbSave.h \
 		../ODM_alpha/app_jsonStream.h
@@ -415,6 +450,7 @@ controller.o: ../ODM_alpha/controller.cpp ../ODM_alpha/controller.h \
 		../ODM_alpha/qjsonstack.h \
 		../ODM_alpha/receiver.h \
 		../ODM_alpha/dispenser.h \
+		../ODM_alpha/cli.h \
 		../ODM_alpha/application.h \
 		../ODM_alpha/app_dbSave.h \
 		../ODM_alpha/app_jsonStream.h
@@ -422,9 +458,6 @@ controller.o: ../ODM_alpha/controller.cpp ../ODM_alpha/controller.h \
 
 dispenser.o: ../ODM_alpha/dispenser.cpp ../ODM_alpha/dispenser.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dispenser.o ../ODM_alpha/dispenser.cpp
-
-application.o: ../ODM_alpha/application.cpp ../ODM_alpha/application.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o application.o ../ODM_alpha/application.cpp
 
 qjsonstack.o: ../ODM_alpha/qjsonstack.cpp ../ODM_alpha/qjsonstack.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qjsonstack.o ../ODM_alpha/qjsonstack.cpp
@@ -436,6 +469,12 @@ app_dbSave.o: ../ODM_alpha/app_dbSave.cpp ../ODM_alpha/app_dbSave.h \
 app_jsonStream.o: ../ODM_alpha/app_jsonStream.cpp ../ODM_alpha/app_jsonStream.h \
 		../ODM_alpha/application.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o app_jsonStream.o ../ODM_alpha/app_jsonStream.cpp
+
+application.o: ../ODM_alpha/application.cpp ../ODM_alpha/application.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o application.o ../ODM_alpha/application.cpp
+
+cli.o: ../ODM_alpha/cli.cpp ../ODM_alpha/cli.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cli.o ../ODM_alpha/cli.cpp
 
 moc_receiver.o: moc_receiver.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_receiver.o moc_receiver.cpp
@@ -451,6 +490,15 @@ moc_application.o: moc_application.cpp
 
 moc_qjsonstack.o: moc_qjsonstack.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_qjsonstack.o moc_qjsonstack.cpp
+
+moc_app_dbSave.o: moc_app_dbSave.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_app_dbSave.o moc_app_dbSave.cpp
+
+moc_app_jsonStream.o: moc_app_jsonStream.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_app_jsonStream.o moc_app_jsonStream.cpp
+
+moc_cli.o: moc_cli.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_cli.o moc_cli.cpp
 
 ####### Install
 
