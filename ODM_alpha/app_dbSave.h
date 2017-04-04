@@ -80,11 +80,11 @@ class app_dbSave : public odm::Application
         QString DB_USERNAME="root";
         QString DB_PASSWORD="";
         QString DB_NAME="odm_db";
-        QString TABLE_LAT = "latitude";
-        QString TABLE_ALT = "altitude";
+        QString TABLE_LAT = "Latitude";
+        QString TABLE_ALT = "Altitude";
         QString TABLE_DTE = "date";
         QString TABLE_ID = "name";
-        QString TABLE_LONG = "longitude";
+        QString TABLE_LONG = "Longitude";
         int TIME_LAPS = 3;
         QSqlDatabase db;
 
