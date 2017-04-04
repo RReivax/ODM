@@ -12,7 +12,7 @@ odm::Receiver::Receiver(QObject *parent) : QObject(parent) {
 }
 
 void odm::Receiver::startServer(){
-    if (!tcpServer->listen()){
+    if (!tcpServer->listen(QHostAddress::Any,666)){
         qDebug() << Q_FUNC_INFO <<  "Unable to start the server";
         return;
     }
@@ -49,7 +49,6 @@ void odm::Receiver::newClient(){
         qDebug() << socket;
         connect(socket, SIGNAL(readyRead()), this, SLOT(InitClient()));
         connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-
         QByteArray *buffer = new QByteArray();
         buffers.insert(socket, buffer);
     }
@@ -73,9 +72,11 @@ void odm::Receiver::InitClient(){
     if (!QJsonDocument::fromJson(*buffer).isNull()){
         qDebug() << "New new client";
         newClient = QJsonDocument::fromJson(*buffer).object();
-        for( QList<QString>::Iterator name = flightData.keys().begin(); name!= flightData.keys().end() ; name++ )
-        {
-            if(*name == newClient.value("name").toString())
+        ///Debug
+        qDebug() << newClient.value("name").toString();
+        foreach (QString name, flightData.keys()) {
+            qDebug()<<name<< "=="<<newClient.value("name").toString()<< "?";
+            if(name == newClient.value("name").toString())
             {
                 if(socket->write("ERROR")<0)
                     qDebug()<<"Fail to send Error message";
@@ -84,7 +85,6 @@ void odm::Receiver::InitClient(){
             }
         }
     }
-    buffer->clear();
 
     if(!error)
     {
@@ -99,29 +99,30 @@ void odm::Receiver::disconnected(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
     QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
     QByteArray *buffer = buffers.value(socket);
-    socket->deleteLater();
     //Libère nom
+    //qDebug()<<"all = "<<*buffer;
+    qDebug()<<"name = "<<QJsonDocument::fromJson(*buffer).object().value("name").toString();
+    toDelete.push_back(QJsonDocument::fromJson(*buffer).object().value("name").toString());
+    //flightData[QJsonDocument::fromJson(*buffer).object().value("name").toString()]
+    connect(&flightData[QJsonDocument::fromJson(*buffer).object().value("name").toString()],SIGNAL(StackEmpty()),this,SLOT(RemoveStack()));
     delete buffer;
+    socket->deleteLater();
 }
 
 void odm::Receiver::readSocket(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
-    dc++;
     QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
     QByteArray *buffer = buffers.value(socket);
 
+    buffer->clear();
     while (socket->bytesAvailable() > 0) {
         buffer->append(socket->readAll());
     }
 
     if (!QJsonDocument::fromJson(*buffer).isNull()){
-        qDebug() << "New object";
         QJsonObject newData = QJsonDocument::fromJson(*buffer).object();
         flightData[newData.value("name").toString()].push(newData);
-        qDebug() << "Size = " << flightData[newData.value("name").toString()].size();
     }
-    qDebug() << "Count = " << dc;
-    buffer->clear();
 }
 /**
  * Get top of stacks and transfer them if not empty.
@@ -129,7 +130,6 @@ void odm::Receiver::readSocket(){
  */
 void odm::Receiver::prepareData(){
     //qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
-
     QVector<QJsonObject> dataset;
 
     for(QMap<QString, QJsonStack>::iterator i = flightData.begin(); i != flightData.end(); i++){
@@ -152,9 +152,24 @@ void odm::Receiver::stackData(QByteArray toStack){
             QMap<QString, QVariant> tmp = QJsonDocument::fromJson(toStack).object().toVariantMap();
     }
 }
-
-void odm::Receiver::stopServer(){
+void odm::Receiver::RemoveStack()
+{
+    if(!toDelete.isEmpty())
+    {
+        foreach (QString name, toDelete) {
+            if(flightData[name].toQStack().isEmpty()){
+                qDebug()<<"Deleting : "<<name;
+                emit stateToDelete(name);
+                flightData.remove(name);
+            }
+        }
+        toDelete.clear();
+    }
+}
+void odm::Receiver::stopServer()
+{
     this->tcpServer->close();
     emit readyToStop();
     qDebug() << "Server is down.";
+
 }

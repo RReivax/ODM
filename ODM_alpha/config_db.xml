@@ -10,7 +10,7 @@
         <TABLE_LAT>latitude</TABLE_LAT> 
         <TABLE_ALT>altitude</TABLE_ALT> 
         <TABLE_DTE>date</TABLE_DTE> 
-        <TABLE_ID>id</TABLE_ID> 
+        <TABLE_ID>name</TABLE_ID> 
         <TABLE_LONG>longitude</TABLE_LONG>
     </table_name>
     <TIME_LAPS>3</TIME_LAPS>  

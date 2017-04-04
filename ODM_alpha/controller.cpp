@@ -31,6 +31,8 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
 
     QObject::connect(&receiver, SIGNAL(transferData(QVector<QJsonObject>)), &dispenser, SLOT(processData(QVector<QJsonObject>)));
 
+    QObject::connect(&receiver,SIGNAL(stateToDelete(QString)),&dispenser,SLOT(removeState(QString)));
+
     //CLI message transmition
     QObject::connect(&cli, SIGNAL(passCommand(QString)), this, SLOT(processCommand(QString)));
 
@@ -63,7 +65,7 @@ void odm::Controller::launchAll(){
     rThread.start();
     dThread.start();
 
-     appdbSaveThread.start();
+    appdbSaveThread.start();
     appjsonStreamThread.start();
 }
 
@@ -76,6 +78,8 @@ void odm::Controller::launch(){
     this->start();
 
     cli.startReading();
+    rThread.start();
+    dThread.start();
 }
 
 void odm::Controller::processCommand(QString cmd){

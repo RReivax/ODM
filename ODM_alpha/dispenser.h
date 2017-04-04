@@ -69,6 +69,7 @@ namespace odm{
          * @brief Emits Dispenser::dispenseState(QVector<QVariantMap>* st, QReadWriteLock* lo).
          */
         void shareState();
+        void removeState(QString name);
     };
 }
 

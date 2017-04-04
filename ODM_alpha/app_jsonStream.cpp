@@ -46,6 +46,7 @@ bool app_jsonStream::initApp()
 
 bool app_jsonStream::closeApp()
 {
-
+    ///To be done
+    return true;
 }
 
