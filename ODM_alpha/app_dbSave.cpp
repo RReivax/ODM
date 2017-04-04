@@ -148,28 +148,32 @@ bool app_dbSave::loopFct(){
     query_insert.prepare("INSERT INTO `main`(`id"+TABLE_ID+"`, `"+TABLE_LONG+"`, `"+TABLE_LAT+"`, `"+TABLE_ALT+"`, `position"+TABLE_DTE+"`) VALUES (:id_v,:long_v,:lat_v,:alt_v,:date_v)");
     QString id_drone, longitude, latitude, altitude, date;
         if(updateState()){
-             if (DEBUG_ENABLE) qDebug() << "state syze :" << state.length();
             for(int i=0 ; i<state.length() ; i++){
+
                 id_drone = state[i].take(TABLE_ID).toString();
                 longitude = state[i].take(TABLE_LONG).toString();
                 latitude = state[i].take(TABLE_LAT).toString();
                 altitude = state[i].take(TABLE_ALT).toString();
                 date = state[i].take(TABLE_DTE).toString();
 
-                query_insert.bindValue(":id_v", id_drone);
-                query_insert.bindValue(":long_v", longitude);
-                query_insert.bindValue(":lat_v", latitude);
-                query_insert.bindValue(":alt_v", altitude);
-                query_insert.bindValue(":date_v", date);
+                if(!lastUpadate.contains(id_drone) || lastUpadate[id_drone]!=date){
+                    lastUpadate.insert(id_drone, date);
 
-                if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "INSERT INTO `main`(`id"+TABLE_ID+"`, `"+TABLE_LONG+"`, `"+TABLE_LAT+"`, `"+TABLE_ALT+"`, `positiondate`) VALUES ("+id_drone+","+longitude+","+latitude+","+altitude+","+date+")";
-                if(query_insert.exec())
-                {
-                    if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Insert success";
-                }
-                else{
-                    if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Insert Failed !";
-                    if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << query_insert.lastError().text();
+                    query_insert.bindValue(":id_v", id_drone);
+                    query_insert.bindValue(":long_v", longitude);
+                    query_insert.bindValue(":lat_v", latitude);
+                    query_insert.bindValue(":alt_v", altitude);
+                    query_insert.bindValue(":date_v", date);
+
+                    if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "INSERT INTO `main`(`id"+TABLE_ID+"`, `"+TABLE_LONG+"`, `"+TABLE_LAT+"`, `"+TABLE_ALT+"`, `positiondate`) VALUES ("+id_drone+","+longitude+","+latitude+","+altitude+","+date+")";
+                    if(query_insert.exec())
+                    {
+                        if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Insert success";
+                    }
+                    else{
+                        if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Insert Failed !";
+                        if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << query_insert.lastError().text();
+                    }
                 }
             }
         }
