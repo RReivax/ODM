@@ -109,7 +109,7 @@ void odm::Controller::processCommand(QString cmd){
 
                         case STOP:
                             if(dThread.isRunning() ){
-                                qDebug() << "Stopping server.";
+                                qDebug() << "Stopping server...";
                                 emit stopServer();
                                 this->dThread.quit();
                             }
@@ -153,10 +153,27 @@ void odm::Controller::processCommand(QString cmd){
                         case STOP:
                             if(appdbSaveThread.isRunning() ){
                                 qDebug() << "Stopping DBSAVE...";
+                                this->appdbSave.closeApp();
                                 this->appdbSaveThread.quit();
+                                qDebug() << "DBSAVE stopped.";
                             }
                             else{
-                                qDebug() << "Server is already down.";
+                                qDebug() << "DBSAVE is already down.";
+                            }
+                        break;
+
+                        case RESTART:
+                            if(appdbSaveThread.isRunning() ){
+                                qDebug() << "Stopping DBSAVE...";
+                                this->appdbSave.closeApp();
+                                this->appdbSaveThread.quit();
+                                qDebug() << "DBSAVE stopped.";
+                                qDebug() << "Launching DBSAVE...";
+                                this->appdbSaveThread.start();
+                            }
+                            else{
+                                qDebug() << "Launching DBSAVE...";
+                                appdbSaveThread.start();
                             }
                         break;
                     }
@@ -167,6 +184,45 @@ void odm::Controller::processCommand(QString cmd){
             break;
 
             case JSONSTREAM:
+                if(l.size() >= 2){
+                        switch (MetaEnum.keysToValue(l[1].toUpper().toLatin1())){
+                            case START:
+                                if(!appjsonStreamThread.isRunning()){
+                                    qDebug() << "Launching JSONSTREAM...";
+                                    appjsonStreamThread.start();
+                                }
+                                else{
+                                    qDebug() << "JSONSTREAM is already running.";
+                                }
+                            break;
+                            case STOP:
+                                if(appjsonStreamThread.isRunning() ){
+                                    qDebug() << "Stopping JSONSTREAM...";
+                                    this->appjsonStream.closeApp();
+                                    this->appjsonStreamThread.quit();
+                                    qDebug() << "JSONSTREAM stopped.";
+                                }
+                                else{
+                                    qDebug() << "JSONSTREAM is already down.";
+                                }
+                            break;
+
+                            case RESTART:
+                                if(appjsonStreamThread.isRunning() ){
+                                    qDebug() << "Stopping JSONSTREAM...";
+                                    this->appjsonStream.closeApp();
+                                    this->appjsonStreamThread.quit();
+                                    qDebug() << "JSONSTREAM stopped.";
+                                    qDebug() << "Launching JSONSTREAM...";
+                                    this->appjsonStreamThread.start();
+                                }
+                                else{
+                                    qDebug() << "Launching JSONSTREAM...";
+                                    appjsonStreamThread.start();
+                                }
+                            break;
+                        }
+                }
             break;
 
             case HELP:
@@ -176,10 +232,23 @@ void odm::Controller::processCommand(QString cmd){
             case EXIT:
             case QUIT:
                 qDebug() << "Shutting down...";
-                this->appdbSaveThread.quit();
-                //this->jsonstreamThread.quit()
-                this->rThread.quit();
-                this->dThread.quit();
+                cliThread.quit();
+               if(appjsonStreamThread.isRunning() ){
+                    qDebug() << "Stopping JSONSTREAM...";
+                    this->appjsonStream.closeApp();
+                    this->appjsonStreamThread.quit();
+                    qDebug() << "JSONSTREAM stopped.";
+                }
+                if(appdbSaveThread.isRunning() ){
+                    qDebug() << "Stopping DBSAVE...";
+                    this->appdbSave.closeApp();
+                    this->appdbSaveThread.quit();
+                    qDebug() << "DBSAVE stopped.";
+                }
+                receiver.stopServer();
+                rThread.quit();
+                dThread.quit();
+                emit quit_all();
                 this->quit();
             break;
 

@@ -34,6 +34,8 @@ int main(int argc, char *argv[])
         qDebug() << "\t" << s;
 
     Controller controller;
+
+    QObject::connect(&controller, SIGNAL(quit_all()), &a, SLOT(quit()));
     if(serviceAll){
         controller.launchAll();
     }
