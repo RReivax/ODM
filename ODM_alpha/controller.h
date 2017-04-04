@@ -33,6 +33,7 @@ namespace odm{
 
         void queued_receiveData();
         void queued_prepareData();
+        void quit_all();
     public slots:
         void processCommand(QString cmd);
     private:
