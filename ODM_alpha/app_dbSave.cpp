@@ -151,10 +151,12 @@ bool app_dbSave::init(){
 
 
 bool app_dbSave::loopFct(){
+    if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "loopFct";
     QSqlQuery query_insert;
     query_insert.prepare("INSERT INTO `main`(`id"+TABLE_ID+"`, `"+TABLE_LONG+"`, `"+TABLE_LAT+"`, `"+TABLE_ALT+"`, `position"+TABLE_DTE+"`) VALUES (:id_v,:long_v,:lat_v,:alt_v,:date_v)");
     QString id_drone, longitude, latitude, altitude, date;
         if(updateState()){
+            if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "updateState";
             for(int i=0 ; i<state.length() ; i++){
 
                 id_drone = state[i].take(TABLE_ID).toString();

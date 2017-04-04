@@ -7,11 +7,11 @@
         <DB_NAME>odm_db</DB_NAME>
     </connection_param>    
     <table_name>
-        <TABLE_LAT>latitude</TABLE_LAT> 
-        <TABLE_ALT>altitude</TABLE_ALT> 
+        <TABLE_LAT>Latitude</TABLE_LAT> 
+        <TABLE_ALT>Altitude</TABLE_ALT> 
         <TABLE_DTE>date</TABLE_DTE> 
         <TABLE_ID>name</TABLE_ID> 
-        <TABLE_LONG>longitude</TABLE_LONG>
+        <TABLE_LONG>Longitude</TABLE_LONG>
     </table_name>
     <TIME_LAPS>3</TIME_LAPS>  
 </Parameters_DB>
