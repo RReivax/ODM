@@ -10,7 +10,7 @@
  * @brief Use to save real time data
  * 		into a specified data base
  *
- * Every TIME_LAPS seconds, the function will copy all the actual infos of UAV (the state vector)
+ * Every TIME_LAPS seconds, the function will copy all the actual infos of UAVs (the state vector)
  * on a DB using MySQL. The DB is configured with the information below
  */
 
