@@ -20,7 +20,7 @@ odm::Receiver::Receiver(QObject *parent) : QObject(parent) {
 
 void odm::Receiver::startServer(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
-    if (!tcpServer->listen(/*QHostAddress::Any,6666*/)){
+    if (!tcpServer->listen(/*QHostAddress::Any,667*/)){
         qDebug() << Q_FUNC_INFO <<  "Unable to start the server";
         return;
     }

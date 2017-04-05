@@ -59,7 +59,7 @@ bool app_dbSave::get_conf(){
     QString n;
     QChar t;
 
-    QFile config("C:/Users/Arnaud/Documents/ECE/ING4/PPE/ODM_alpha/config_db.xml");
+    QFile config("config_db.xml");
     if(!config.open(QIODevice::ReadOnly)){
         if (DEBUG_ENABLE)
             qDebug() << Q_FUNC_INFO << config.error();

@@ -49,16 +49,16 @@ bool app_jsonStream::loopFct()
 
                 QJsonDocument data(QJsonObject::fromVariantMap(state[i]));
                 socket->write(data.toJson(QJsonDocument::Compact));
-                socket->waitForBytesWritten(1000);
+                socket->waitForBytesWritten(-1);
                 qDebug() << "Packet Sent:" << data.toJson(QJsonDocument::Compact) << "end of packet";
-                QThread::msleep(500);
+                //QThread::msleep(50);
             }
         }
     }
     else{
         qDebug() << "No updates";
     }
-    QThread::sleep(TIME_LAPS);
+    //QThread::sleep(TIME_LAPS);
 
     return false;
 }
