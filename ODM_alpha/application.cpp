@@ -39,25 +39,33 @@ void odm::Application::launch(){
     if(LOOP && initApp()){
        bool closed = appLoop();
          if(closed){
-            QThread::currentThread()->exit();
+            qDebug() << this->metaObject()->className() << "shut down.";
+            QThread::currentThread()->quit();
          }else{
             qDebug() << "Error closing the application " << this->metaObject()->className() << ". Forcing closing.";
             QThread::currentThread()->terminate();
          }
     }
+    else{
+        qDebug() << "Initilization failed for " << this->metaObject()->className()  << ". Terminating service.";
+        QThread::currentThread()->terminate();
+    }
 }
 
 bool odm::Application::appLoop(){
-    bool interupt = true;
-    while((!QThread::currentThread()->isInterruptionRequested())&&interupt){
+    bool interupt = false;
+    while((!QThread::currentThread()->isInterruptionRequested())&&!interupt){
         interupt = loopFct();
+        //qDebug() << "Looping";
     }
+        qDebug() << "CLOSING" << this->metaObject()->className();
     return closeApp();
 }
 
 void odm::Application::askForClosing(){
     bool closed = closeApp();
     if(closed){
+        qDebug() << this->metaObject()->className() << "shut down.";
         QThread::currentThread()->exit();
     }else{
         qDebug() << "Error closing the application " << this->metaObject()->className() << ". Forcing closing.";

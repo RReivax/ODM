@@ -209,8 +209,7 @@ void odm::Controller::processCommand(QString cmd){
                             case STOP:
                                 if(appjsonStreamThread.isRunning() ){
                                     qDebug() << "Stopping JSONSTREAM...";
-                                    this->appjsonStream.closeApp();
-                                    this->appjsonStreamThread.quit();
+                                    this->appjsonStreamThread.requestInterruption();
                                     qDebug() << "JSONSTREAM stopped.";
                                 }
                                 else{

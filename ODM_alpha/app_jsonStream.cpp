@@ -28,6 +28,7 @@ bool app_jsonStream::initApp()
     else
     {
         qDebug() << "could not connect to the TCP server...";
+        socket->disconnectFromHost();
         return false;
     }
 }
@@ -41,6 +42,7 @@ bool app_jsonStream::defAppType()
 
 bool app_jsonStream::loopFct()
 {
+    //qDebug() << "Loop Fct";
     if(updateState()){
         if(state.length() > 0){
             for(int i = 0;i<state.length();i++){
@@ -57,13 +59,14 @@ bool app_jsonStream::loopFct()
     }
     QThread::sleep(TIME_LAPS);
 
-    return true;
+    return false;
 }
 
 
 bool app_jsonStream::closeApp()
 {
     socket->disconnectFromHost();
+
     return true;
 }
 
