@@ -9,11 +9,11 @@ var app = express();
 var applicationServer = net.createServer(function(socket){
 	console.log('server connected');
 	socket.on('data', function(data) {
-		console.log(String.fromCharCode(data));
-		data= JSON.parse(data);
-		console.log(data);
-		console.log('server data:\n'+data.name + ' ' +data.Latitude+' '+data.Longitude);
-        variable = data;
+	data = data + "";
+	if(data.replace(/[^{]/g,"").length < 2)
+				variable =data; 
+				console.log("variable : "+variable+ " END");
+				
     });
 });
 
@@ -33,7 +33,7 @@ io.sockets.on('connection', function (socket) {
 	socket.emit('update', variable);
 	setInterval(function(){
     	socket.emit('update', variable); 
-	}, 100);
+	}, 20);
 });
 
 applicationServer.listen(7070);
