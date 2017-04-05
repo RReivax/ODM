@@ -17,7 +17,7 @@ namespace odm{
         Q_OBJECT
     public:
         explicit CLI(QWidget *parent = 0);
-
+        void closeEvent(QCloseEvent *event);
     signals:
         void passCommand(QString cmd);
     public slots:

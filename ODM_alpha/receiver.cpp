@@ -19,6 +19,7 @@ odm::Receiver::Receiver(QObject *parent) : QObject(parent) {
 }
 
 void odm::Receiver::startServer(){
+    qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
     if (!tcpServer->listen(/*QHostAddress::Any,6666*/)){
         qDebug() << Q_FUNC_INFO <<  "Unable to start the server";
         return;
@@ -52,7 +53,6 @@ void odm::Receiver::newClient(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
     while(tcpServer->hasPendingConnections()){
         QTcpSocket* socket=tcpServer->nextPendingConnection();
-
         qDebug() << socket;
         connect(socket, SIGNAL(readyRead()), this, SLOT(InitClient()));
         connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
@@ -175,8 +175,15 @@ void odm::Receiver::RemoveStack()
 }
 void odm::Receiver::stopServer()
 {
-    this->tcpServer->close();
-    emit readyToStop();
-    qDebug() << "Server is down.";
 
+    foreach(QTcpSocket* sock, buffers.keys()){
+        qDebug() << " NIK TA SOCKET";
+        sock->disconnectFromHost();
+        buffers.remove(sock);
+    }
+    qDebug() << " LE OUI ";
+    this->tcpServer->deleteLater();
+    qDebug() << " LE OUI OUI";
+    emit readyToStop();
+    //qDebug() << "Server is down.";
 }

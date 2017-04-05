@@ -41,13 +41,6 @@ namespace odm{
         QVector<QVariantMap> state;/**< The real time drone data set*/
         QMap<QString, QChar> params;/**< The list of a drone data set parameters*/
         QReadWriteLock lock;/**< A lock to secure reading/writing in state*/
-
-    private:
-        /**
-         * @fn void Dispenser::initStateParams()
-         * @brief Settles params by reading in config.xml
-         */
-        void initStateParams();
     signals:
         /**
          * @fn Dispenser::requestData()
@@ -71,6 +64,11 @@ namespace odm{
          * Gets a QJsonObject for each drone. Stores the one with the most recent date in state[drone].
          */
         void processData(QVector<QJsonObject>);
+        /**
+         * @fn void Dispenser::initStateParams()
+         * @brief Settles params by reading in config.xml
+         */
+        void initStateParams();
         /**
          * @fn Dispenser::shareState()
          * @brief Emits Dispenser::dispenseState(QVector<QVariantMap>* st, QReadWriteLock* lo).

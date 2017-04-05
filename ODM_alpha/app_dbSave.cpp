@@ -14,7 +14,6 @@ app_dbSave::app_dbSave()
 
 bool app_dbSave::initApp(){
     bool correctInit=true;
-    QThread::sleep(1);
     is_running=true;
     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << "Start of app_dbSave on:";
     if (DEBUG_ENABLE) qDebug() << MARKER_DEBUG << Q_FUNC_INFO << QThread::currentThreadId();
@@ -187,7 +186,7 @@ bool app_dbSave::loopFct(){
             }
         }
         QThread::sleep(TIME_LAPS);
-    return true;
+    return false;
 }
 
 

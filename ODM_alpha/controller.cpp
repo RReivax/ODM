@@ -16,12 +16,13 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
     receiver.moveToThread(&rThread);
     dispenser.moveToThread(&dThread);
 
-    //appdbSave.moveToThread(&appdbSaveThread);
+    appdbSave.moveToThread(&appdbSaveThread);
     appjsonStream.moveToThread(&appjsonStreamThread);
 
     qRegisterMetaType<QVector<QJsonObject>>("QVector<QJsonObject>");
-    QObject::connect(&dThread, SIGNAL(started()), &dispenser, SIGNAL(requestData()));
+    QObject::connect(&dThread, SIGNAL(started()), &dispenser, SLOT(initStateParams()));
     QObject::connect(&rThread, SIGNAL(started()), &receiver, SLOT(startServer()));
+    QObject::connect(&cliThread, SIGNAL(started()), &cli, SLOT(startReading()));
     QObject::connect(this, SIGNAL(stopServer()), &receiver, SLOT(stopServer()));
     QObject::connect(&receiver, SIGNAL(readyToStop()), &rThread, SLOT(quit()));
 
@@ -164,9 +165,7 @@ void odm::Controller::processCommand(QString cmd){
                         case STOP:
                             if(appdbSaveThread.isRunning() ){
                                 qDebug() << "Stopping DBSAVE...";
-                                this->appdbSave.closeApp();
-                                this->appdbSaveThread.quit();
-                                qDebug() << "DBSAVE stopped.";
+                                this->appdbSaveThread.requestInterruption();
                             }
                             else{
                                 qDebug() << "DBSAVE is already down.";
@@ -210,7 +209,6 @@ void odm::Controller::processCommand(QString cmd){
                                 if(appjsonStreamThread.isRunning() ){
                                     qDebug() << "Stopping JSONSTREAM...";
                                     this->appjsonStreamThread.requestInterruption();
-                                    qDebug() << "JSONSTREAM stopped.";
                                 }
                                 else{
                                     qDebug() << "JSONSTREAM is already down.";
@@ -241,8 +239,7 @@ void odm::Controller::processCommand(QString cmd){
 
             case EXIT:
             case QUIT:
-                qDebug() << "Shutting down...";
-                cliThread.quit();
+               qDebug() << "Shutting down...";
                if(appjsonStreamThread.isRunning() ){
                     qDebug() << "Stopping JSONSTREAM...";
                     this->appjsonStream.closeApp();
@@ -255,11 +252,17 @@ void odm::Controller::processCommand(QString cmd){
                     this->appdbSaveThread.quit();
                     qDebug() << "DBSAVE stopped.";
                 }
+                qDebug() << "server downing";
                 receiver.stopServer();
+                qDebug() << "server down";
                 rThread.quit();
+                qDebug() << "Receiver down";
                 dThread.quit();
+                qDebug() << "Dispencer down";
                 emit quit_all();
-                this->quit();
+                qDebug() << "Emit quit";
+                this->deleteLater();
+                qDebug() << "???????";
             break;
 
             default:

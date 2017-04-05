@@ -10,7 +10,6 @@
 odm::Dispenser::Dispenser(QObject *parent) : QObject(parent)
 {
     state = QVector<QVariantMap>();
-    initStateParams();
 }
 
 void odm::Dispenser::initStateParams(){
@@ -53,6 +52,8 @@ void odm::Dispenser::initStateParams(){
         i.next();
         qDebug() << i.key() << "-->" << i.value();
     }
+
+    emit requestData();
 }
 
 /**

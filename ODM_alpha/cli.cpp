@@ -25,6 +25,7 @@ odm::CLI::CLI(QWidget *parent) : QWidget(parent){
 
 void odm::CLI::startReading(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
+
     QObject::connect(inpLine, SIGNAL(returnPressed()), this, SLOT(readCommand()));
     QObject::connect(btn, SIGNAL(clicked(bool)), this, SLOT(readCommand()));
     show();
@@ -34,4 +35,8 @@ void odm::CLI::readCommand(){
     qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
     if(!inpLine->text().isEmpty())emit passCommand(inpLine->text());
     inpLine->setText("");
+}
+
+void odm::CLI::closeEvent(QCloseEvent *event){
+    event->ignore();
 }
