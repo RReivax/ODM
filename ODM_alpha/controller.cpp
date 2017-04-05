@@ -20,7 +20,7 @@ odm::Controller::Controller(QObject *parent) : QThread(parent) {
     appjsonStream.moveToThread(&appjsonStreamThread);
 
     qRegisterMetaType<QVector<QJsonObject>>("QVector<QJsonObject>");
-    QObject::connect(&dThread, SIGNAL(started()), &dispenser, SLOT(initStateParams()));
+    QObject::connect(&dThread, SIGNAL(started()), &dispenser, SIGNAL(requestData()));
     QObject::connect(&rThread, SIGNAL(started()), &receiver, SLOT(startServer()));
     QObject::connect(&cliThread, SIGNAL(started()), &cli, SLOT(startReading()));
     QObject::connect(this, SIGNAL(stopServer()), &receiver, SLOT(stopServer()));
