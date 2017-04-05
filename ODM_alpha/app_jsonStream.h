@@ -23,7 +23,7 @@ class app_jsonStream : public odm::Application
 {
     Q_OBJECT
 
-    public:
+public:
         app_jsonStream();
 
 

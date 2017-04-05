@@ -48,6 +48,7 @@ function initmap() {
 				console.log(message);
 			if(drones[message.name] === undefined){
 					drones[message.name]= L.marker([message.Latitude,message.Longitude],{icon:droneIcon}).addTo(map);
+					drones[message.name].bindPopup('<b>'+message.name+'</b>');
 			}
 			else if(message.name != null && message.Latitude !=null && message.Longitude !=null){
 				drones[message.name].setLatLng(new L.LatLng(message.Latitude,message.Longitude));
