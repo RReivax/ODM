@@ -68,6 +68,9 @@ bool app_jsonStream::closeApp()
 {
     socket->disconnectFromHost();
 
-    return true;
+    if(socket->state() == QAbstractSocket::UnconnectedState || socket->waitForDisconnected(3000))
+        return true;
+    else
+        return false;
 }
 
