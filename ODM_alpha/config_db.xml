@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Parameters_DB>
+    <connection_param>
+        <DB_HOSTNAME>localhost</DB_HOSTNAME>
+        <DB_USERNAME>root</DB_USERNAME>
+        <DB_PASSWORD></DB_PASSWORD>
+        <DB_NAME>odm_db</DB_NAME>
+    </connection_param>    
+    <table_name>
+        <TABLE_LAT>Latitude</TABLE_LAT> 
+        <TABLE_ALT>Altitude</TABLE_ALT> 
+        <TABLE_DTE>date</TABLE_DTE> 
+        <TABLE_ID>name</TABLE_ID> 
+        <TABLE_LONG>Longitude</TABLE_LONG>
+    </table_name>
+    <TIME_LAPS>3</TIME_LAPS>  
+</Parameters_DB>
