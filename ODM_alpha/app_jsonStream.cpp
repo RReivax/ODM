@@ -47,8 +47,9 @@ bool app_jsonStream::loopFct()
 
                 QJsonDocument data(QJsonObject::fromVariantMap(state[i]));
                 socket->write(data.toJson(QJsonDocument::Compact));
-                socket->waitForBytesWritten(-1);
-                qDebug() << data.toJson(QJsonDocument::Compact);
+                socket->waitForBytesWritten(1000);
+                qDebug() << "Packet Sent:" << data.toJson(QJsonDocument::Compact) << "end of packet";
+                QThread::msleep(500);
             }
         }
     }
@@ -64,6 +65,8 @@ bool app_jsonStream::loopFct()
 bool app_jsonStream::closeApp()
 {
     socket->disconnectFromHost();
+    QThread::sleep(2);
+
     return true;
 }
 

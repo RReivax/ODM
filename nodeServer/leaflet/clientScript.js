@@ -26,7 +26,7 @@ function initmap() {
     // create the tile layer with correct attribution
     var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-    var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 18, attribution: osmAttrib});
+    var osm = new L.TileLayer(osmUrl, {minZoom: 0, maxZoom: 18, attribution: osmAttrib});
 
     map.setView(posMarker,9);
 	map.setZoom(18);
@@ -36,7 +36,8 @@ function initmap() {
     var socket = io.connect('http://'+location.hostname+':8080');
 
 		socket.on('update', function(message){
-				console.log(message.name);
+				message = JSON.parse(message);
+				console.log(message);
 			if(drones[message.name] === undefined){
 					drones[message.name]= L.marker([message.Latitude,message.Longitude],{icon:droneIcon}).addTo(map);
 			}
