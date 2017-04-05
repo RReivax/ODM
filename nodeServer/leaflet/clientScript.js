@@ -11,6 +11,8 @@ function initmap() {
     // set up the map
 	
     map = new L.Map('map');
+
+	//position of our school
 	posMarker = new L.LatLng(48.851658, 2.287161);
 	droneIcon = L.icon({
 			//Icon made by Freepik from www.flaticon.com 
@@ -30,7 +32,6 @@ function initmap() {
 
     map.setView(posMarker,9);
 	map.setZoom(18);
-	//marker = L.marker([48.851658,2.28716],{icon:droneIcon}).addTo(map);
     map.addLayer(osm);
 
     var socket = io.connect('http://'+location.hostname+':8080');
